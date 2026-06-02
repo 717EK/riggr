@@ -105,6 +105,10 @@ export default function App() {
     },
     changePin: (pin) => commit({ ...ref.current, users: ref.current.users.map((u) => u.id === me.id ? { ...u, pin } : u) }),
     updateProfile: (d) => { commit({ ...ref.current, users: ref.current.users.map((u) => u.id === me.id ? { ...u, ...d } : u) }); setModal(null); },
+    postJobUpdate: (jobId, upd) => {
+      const entry = { id: uid(), ts: nowISO(), by: me.name, byId: me.id, text: upd.text || '', image: upd.image || '', doc: upd.doc || '', docName: upd.docName || '' };
+      commit({ ...ref.current, jobs: ref.current.jobs.map((j) => j.id === jobId ? { ...j, updates: [...(j.updates || []), entry], history: [...(j.history || []), { ts: entry.ts, by: me.name, action: upd.text ? 'posted an update' : 'attached a file' }] } : j) });
+    },
     markRead: () => commit({ ...ref.current, notifications: ref.current.notifications.map((n) => (n.toUser === me.id || n.toDept === me.deptId) ? { ...n, read: true } : n) }),
     openNotif: (n) => {
       // remove this notification

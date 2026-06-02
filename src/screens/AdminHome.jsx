@@ -48,10 +48,7 @@ export function AdminHome({ state, deptById, projById, approvals, lowStock, ops 
 
   const sections = {
     volume: { wide: true, node: (
-      <>
-        <h2 style={{ fontSize: 17, margin: '0 4px 10px' }}>Job volume</h2>
-        <Visualizer jobs={scoped} mode={mode} setMode={setMode} selKey={selKey} setSelKey={setSelKey} onCal={() => setCalOpen(true)} />
-      </>
+      <Visualizer jobs={scoped} mode={mode} setMode={setMode} selKey={selKey} setSelKey={setSelKey} onCal={() => setCalOpen(true)} />
     ) },
     selected: { node: (
       <>

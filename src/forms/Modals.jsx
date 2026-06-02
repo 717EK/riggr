@@ -12,7 +12,7 @@ export function Modals({ modal, state, deptById, projById, me, isAdmin, ops }) {
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="grip" />
         {modal.t === 'job' && <JobForm job={modal.job} preProject={modal.preProject} departments={departments} users={users} projects={projects} onClose={close} onSave={(d) => modal.job ? ops.editJob(modal.job.id, d) : ops.createJob(d)} />}
-        {modal.t === 'jobview' && <JobView job={modal.job} deptById={deptById} projById={projById} isAdmin={isAdmin} ops={ops} onClose={close} />}
+        {modal.t === 'jobview' && <JobView job={state.jobs.find((x) => x.id === modal.job.id) || modal.job} deptById={deptById} projById={projById} isAdmin={isAdmin} me={me} ops={ops} onClose={close} />}
         {modal.t === 'askUpdate' && <AskUpdateForm job={modal.job} project={modal.project} deptById={deptById} state={state} onClose={close} onSend={(comment) => modal.project ? ops.askProjectUpdate(modal.project, comment) : ops.askJobUpdate(modal.job, comment)} />}
         {modal.t === 'project' && <ProjectForm project={modal.project} users={users} onClose={close} onSave={(d) => modal.project ? ops.updateProject(modal.project.id, d) : ops.addProject(d)} />}
         {modal.t === 'employee' && <EmployeeForm emp={modal.emp} departments={departments} users={users} onClose={close} onSave={(d) => modal.emp ? ops.editEmployee(modal.emp.id, d) : ops.addEmployee(d)} onToggle={() => ops.toggleActive(modal.emp.id)} onDelete={() => ops.deleteUser(modal.emp.id)} />}
@@ -62,8 +62,27 @@ export function JobForm({ job, preProject, departments, users, projects, request
 }
 export function deptById2(departments, id) { return (departments.find((d) => d.id === id) || {}).name || 'department'; }
 
-export function JobView({ job: j, deptById, projById, isAdmin, ops, onClose }) {
+export function JobView({ job: j, deptById, projById, isAdmin, me, ops, onClose }) {
   const d = deptById(j.deptId), st = STATUS[j.status], pr = j.projectId ? projById(j.projectId) : null;
+  const updates = j.updates || [];
+  const closed = ['completed', 'terminated'].includes(j.status);
+  const canPost = me && !closed && (isAdmin || j.assigneeId === me.id || (!j.assigneeId && j.deptId === me.deptId));
+  const [text, setText] = useState('');
+  const [img, setImg] = useState('');
+  const [docName, setDocName] = useState('');
+  const [docData, setDocData] = useState('');
+  const [busy, setBusy] = useState(false);
+  const imgRef = useRef(null), docRef = useRef(null);
+
+  const onImg = (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return; setBusy(true);
+    const r = new FileReader();
+    r.onload = () => { const im = new Image(); im.onload = () => { const MX = 900; let w = im.width, h = im.height; if (w > MX || h > MX) { const s = MX / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); } const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(im, 0, 0, w, h); setImg(c.toDataURL('image/jpeg', 0.78)); setBusy(false); }; im.onerror = () => setBusy(false); im.src = r.result; };
+    r.onerror = () => setBusy(false); r.readAsDataURL(f);
+  };
+  const onDoc = (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; if (f.size > 3 * 1024 * 1024) { alert('File too large (max 3MB)'); return; } const r = new FileReader(); r.onload = () => { setDocData(r.result); setDocName(f.name); }; r.readAsDataURL(f); };
+  const post = () => { if (!text.trim() && !img && !docData) return; ops.postJobUpdate(j.id, { text: text.trim(), image: img, doc: docData, docName }); setText(''); setImg(''); setDocData(''); setDocName(''); };
+
   return (
     <>
       <div className="sh-h"><h3>{j.jobNo}</h3><button className="ico-btn sq" onClick={onClose}><X size={17} /></button></div>
@@ -71,14 +90,46 @@ export function JobView({ job: j, deptById, projById, isAdmin, ops, onClose }) {
       <div className="card" style={{ marginBottom: 12 }}>
         <Row k="Customer" v={j.customer || '—'} /><Row k="Product" v={j.product || '—'} /><Row k="Material" v={j.material || '—'} /><Row k="Process" v={j.process || '—'} /><Row k="Quantity" v={j.qty || '—'} /><Row k="Assigned" v={j.assigneeId ? (j.operator || 'User') : `All ${d.name}`} /><Row k="Start" v={fmtT(j.startTime)} /><Row k="End" v={fmtT(j.endTime)} /><Row k="Date" v={fmtD(j.date)} last />
       </div>
-      {j.remarks && <div className="card" style={{ marginBottom: 12 }}><div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--faint)', fontWeight: 700, marginBottom: 4 }}>Remarks</div><div style={{ fontSize: 13.5 }}>{j.remarks}</div></div>}
-      {(j.history || []).length > 0 && <div className="card" style={{ marginBottom: isAdmin ? 14 : 0 }}><div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--faint)', fontWeight: 700, marginBottom: 8 }}>Activity</div>{j.history.slice().reverse().map((h, i) => <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, padding: '5px 0', borderBottom: i < j.history.length - 1 ? '1px solid var(--line)' : 'none' }}><span style={{ fontWeight: 600 }}>{h.by} · {h.action}</span><span style={{ color: 'var(--muted)' }}>{fmtT(h.ts)}</span></div>)}</div>}
-      {isAdmin && ops && <div className="acts">
+      {j.remarks && <div className="card" style={{ marginBottom: 12 }}><div className="cap">Remarks</div><div style={{ fontSize: 13.5 }}>{j.remarks}</div></div>}
+
+      {/* UPDATES TIMELINE */}
+      <div className="cap" style={{ margin: '4px 2px 8px' }}>Updates{updates.length ? ` (${updates.length})` : ''}</div>
+      {updates.length === 0 && !canPost && <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12, padding: '0 2px' }}>No updates yet.</div>}
+      {updates.length > 0 && <div style={{ marginBottom: 12 }}>
+        {updates.slice().reverse().map((u) => (
+          <div key={u.id} className="upd-item">
+            <div className="upd-dot" />
+            <div className="upd-body">
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}><span style={{ fontWeight: 700, fontSize: 13 }}>{u.by}</span><span style={{ fontSize: 11.5, color: 'var(--muted)' }}>{fmtD(u.ts)} · {fmtT(u.ts)}</span></div>
+              {u.text && <div style={{ fontSize: 13.5, marginTop: 3 }}>{u.text}</div>}
+              {u.image && <img src={u.image} alt="" style={{ width: '100%', borderRadius: 12, marginTop: 8, display: 'block' }} />}
+              {u.doc && <a href={u.doc} download={u.docName} className="upd-doc"><Package size={14} />{u.docName || 'Attachment'}</a>}
+            </div>
+          </div>
+        ))}
+      </div>}
+
+      {/* COMPOSER */}
+      {canPost && <div className="card" style={{ marginBottom: isAdmin ? 14 : 0 }}>
+        <textarea className="in" rows={2} value={text} onChange={(e) => setText(e.target.value)} placeholder="Post an update — progress, a blocker, a note…" />
+        {img && <div style={{ position: 'relative', marginTop: 8 }}><img src={img} alt="" style={{ width: '100%', borderRadius: 12, display: 'block' }} /><button className="ico-btn sq" style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,.5)', color: '#fff' }} onClick={() => setImg('')}><X size={15} /></button></div>}
+        {docName && <div className="upd-doc" style={{ marginTop: 8 }}><Package size={14} />{docName}<button className="ico-btn sq" style={{ marginLeft: 'auto', width: 26, height: 26 }} onClick={() => { setDocData(''); setDocName(''); }}><X size={13} /></button></div>}
+        <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+          <button className="btn ghost sm" onClick={() => imgRef.current && imgRef.current.click()}><Plus size={14} />{busy ? '…' : 'Photo'}</button>
+          <button className="btn ghost sm" onClick={() => docRef.current && docRef.current.click()}><Package size={14} />File</button>
+          <span style={{ flex: 1 }} />
+          <button className="btn primary sm" disabled={!text.trim() && !img && !docData} onClick={post}>Post update</button>
+        </div>
+        <input ref={imgRef} type="file" accept="image/*" onChange={onImg} style={{ display: 'none' }} />
+        <input ref={docRef} type="file" onChange={onDoc} style={{ display: 'none' }} />
+      </div>}
+
+      {isAdmin && ops && <div className="acts" style={{ marginTop: 14 }}>
         {j.status === 'awaiting' && <><button className="btn ok" onClick={() => { ops.approve(j); onClose(); }}><CheckCircle2 size={15} />Approve</button><button className="btn info" onClick={() => { ops.reactivate(j); onClose(); }}><RotateCcw size={15} />Reactivate</button></>}
         {j.status === 'completed' && <button className="btn info sm" onClick={() => { ops.reactivate(j); onClose(); }}><RotateCcw size={14} />Reopen</button>}
-        {!['completed', 'terminated'].includes(j.status) && <button className="btn info sm" onClick={() => ops.setModal({ t: 'askUpdate', job: j })}><Bell size={14} />Ask update</button>}
+        {!closed && <button className="btn info sm" onClick={() => ops.setModal({ t: 'askUpdate', job: j })}><Bell size={14} />Ask update</button>}
         {j.status !== 'terminated' && <button className="btn ghost sm" onClick={() => ops.setModal({ t: 'job', job: j })}><Pencil size={14} />Edit</button>}
-        {!['completed', 'terminated'].includes(j.status) && <button className="btn danger sm" onClick={() => { ops.terminate(j); onClose(); }}><XCircle size={14} />Terminate</button>}
+        {!closed && <button className="btn danger sm" onClick={() => { ops.terminate(j); onClose(); }}><XCircle size={14} />Terminate</button>}
       </div>}
     </>
   );

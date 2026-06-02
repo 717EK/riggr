@@ -1,7 +1,7 @@
 export const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
-:root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:52px; }
+:root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:48px; }
 .gt{font-family:'Hanken Grotesk',system-ui,sans-serif; color:var(--text); width:100%; height:100vh; height:100dvh;
   background:var(--bg); display:flex; justify-content:center; transition:background .3s; overflow:hidden}
 .shell{width:100%; max-width:480px; height:100%; background:var(--app); position:relative;
@@ -72,7 +72,14 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 
 .pillrow{display:flex; gap:10px; overflow-x:auto; padding:2px 0 4px; scrollbar-width:none; margin-bottom:4px}
 .pillrow::-webkit-scrollbar{display:none}
-.spill{flex:0 0 auto; background:var(--card); box-shadow:var(--shadow-sm); border-radius:18px; padding:13px 17px; display:flex; align-items:center; gap:11px; cursor:pointer; transition:.15s}
+.spill{flex:0 0 auto; background:var(--card); box-shadow:var(--shadow-sm); border-radius:18px; padding:13px 17px; display:flex; align-items:center; gap:11px; cursor:pointer; transition:.15s; overflow:hidden; position:relative}
+.spill .ic2{color:var(--muted); flex-shrink:0}
+.spill-meta{background:transparent; min-width:0}
+.cap{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--faint); font-weight:700; margin-bottom:8px}
+.upd-item{display:flex; gap:10px; padding-left:2px}
+.upd-dot{flex:0 0 auto; width:9px; height:9px; border-radius:50%; background:var(--accent); margin-top:6px; box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.upd-body{flex:1; min-width:0; background:var(--card); border-radius:14px; box-shadow:var(--shadow-sm); padding:11px 13px; margin-bottom:10px}
+.upd-doc{display:flex; align-items:center; gap:7px; margin-top:8px; padding:9px 11px; border-radius:11px; background:var(--card2); font-size:12.5px; font-weight:600; color:var(--text); text-decoration:none}
 .spill:active{transform:scale(.97)}
 .spill.accent{background:var(--accent)} .spill.accent .k{color:color-mix(in srgb,var(--accent-ink) 70%,transparent)} .spill.accent .v,.spill.accent .ic2{color:var(--accent-ink)}
 .spill.olive{background:var(--olive)} .spill.olive .k{color:color-mix(in srgb,var(--olive-text) 65%,transparent)} .spill.olive .v,.spill.olive .ic2{color:var(--olive-text)}
@@ -122,9 +129,9 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 
 .bnav{position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--line);
   display:flex; align-items:stretch; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05);
-  height:calc(var(--nav-h) + min(env(safe-area-inset-bottom,0px), 12px)); padding-bottom:min(env(safe-area-inset-bottom,0px), 12px)}
+  height:calc(var(--nav-h) + min(env(safe-area-inset-bottom,0px), 6px)); padding-bottom:min(env(safe-area-inset-bottom,0px), 6px)}
 .bnav::after{content:''; position:absolute; left:0; right:0; top:100%; height:60px; background:var(--card)}
-.bn{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:6px 0; color:var(--faint); cursor:pointer;
+.bn{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:3px 0; color:var(--faint); cursor:pointer;
   font-size:10px; font-weight:700; background:none; border:none; transition:.15s; position:relative; min-width:0}
 .bn.on{color:var(--ink)}
 .bn .bdot{position:absolute; top:4px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
