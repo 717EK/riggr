@@ -15,7 +15,7 @@ export function Modals({ modal, state, deptById, projById, me, isAdmin, ops }) {
         {modal.t === 'jobview' && <JobView job={modal.job} deptById={deptById} projById={projById} isAdmin={isAdmin} ops={ops} onClose={close} />}
         {modal.t === 'askUpdate' && <AskUpdateForm job={modal.job} project={modal.project} deptById={deptById} state={state} onClose={close} onSend={(comment) => modal.project ? ops.askProjectUpdate(modal.project, comment) : ops.askJobUpdate(modal.job, comment)} />}
         {modal.t === 'project' && <ProjectForm project={modal.project} users={users} onClose={close} onSave={(d) => modal.project ? ops.updateProject(modal.project.id, d) : ops.addProject(d)} />}
-        {modal.t === 'employee' && <EmployeeForm emp={modal.emp} departments={departments} users={users} onClose={close} onSave={(d) => modal.emp ? ops.editEmployee(modal.emp.id, d) : ops.addEmployee(d)} onToggle={() => ops.toggleActive(modal.emp.id)} />}
+        {modal.t === 'employee' && <EmployeeForm emp={modal.emp} departments={departments} users={users} onClose={close} onSave={(d) => modal.emp ? ops.editEmployee(modal.emp.id, d) : ops.addEmployee(d)} onToggle={() => ops.toggleActive(modal.emp.id)} onDelete={() => ops.deleteUser(modal.emp.id)} />}
         {modal.t === 'approveReq' && <ApproveReqForm req={modal.req} users={users} deptById={deptById} onClose={close} onApprove={(d) => ops.approveRequest(modal.req, d)} />}
         {modal.t === 'dept' && <DeptForm dept={modal.dept} onClose={close} onSave={(d) => modal.dept ? ops.updateDept(modal.dept.id, d) : ops.addDept(d.name, d.color)} />}
         {modal.t === 'item' && <ItemForm item={modal.item} departments={departments} onClose={close} onSave={(d) => modal.item ? ops.editItem(modal.item.id, d) : ops.addItem(d)} />}
@@ -125,13 +125,14 @@ export function ProjectForm({ project, users, requestMode, reviewReq, onClose, o
   );
 }
 
-export function EmployeeForm({ emp, departments, users, onClose, onSave, onToggle }) {
+export function EmployeeForm({ emp, departments, users, onClose, onSave, onToggle, onDelete }) {
   const [name, setName] = useState(emp?.name || '');
   const [deptId, setDeptId] = useState(emp?.deptId || departments[0]?.id);
   const [hasAccess, setHasAccess] = useState(emp ? emp.hasAccess : true);
   const deptName = (departments.find((d) => d.id === deptId) || {}).name;
   const [username, setUsername] = useState(emp?.username || '');
   const [tempPin, setTempPin] = useState(emp ? null : genPin(users));
+  const [confirmDel, setConfirmDel] = useState(false);
   useEffect(() => { if (!emp && hasAccess) setUsername(genUsername(name || 'user', deptName, users)); }, [name, deptId, hasAccess, emp]);
   const save = () => { const base = { name: name.trim(), deptId, hasAccess }; if (!emp && hasAccess) onSave({ ...base, username, pin: tempPin, mustReset: true }); else if (!emp) onSave({ ...base, username: '', pin: '', mustReset: false }); else onSave({ ...base, username: hasAccess ? (emp.username || genUsername(name, deptName, users)) : emp.username }); };
   return (
@@ -149,6 +150,13 @@ export function EmployeeForm({ emp, departments, users, onClose, onSave, onToggl
       {hasAccess && emp && <div style={{ fontSize: 12.5, color: 'var(--muted)', marginBottom: 14 }}>Username: <b>@{emp.username}</b>{emp.mustReset ? ' · PIN reset pending' : ''}</div>}
       <button className="btn primary block" disabled={!name.trim()} onClick={save}>{emp ? 'Save changes' : 'Add member'}</button>
       {emp && !emp.isUniversal && <button className="btn ghost block" style={{ marginTop: 10, color: emp.active ? '#dc2626' : '#3f7d22' }} onClick={onToggle}>{emp.active ? 'Deactivate access' : 'Reactivate access'}</button>}
+      {emp && !emp.isUniversal && (confirmDel
+        ? <div style={{ marginTop: 10, padding: 14, borderRadius: 14, background: 'color-mix(in srgb,#ef4444 9%,transparent)' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10 }}>Remove <b>{emp.name}</b> permanently? Their jobs become unassigned. This can't be undone.</div>
+            <div style={{ display: 'flex', gap: 8 }}><button className="btn danger" style={{ flex: 1 }} onClick={onDelete}><Trash2 size={15} />Remove completely</button><button className="btn ghost" style={{ flex: 1 }} onClick={() => setConfirmDel(false)}>Cancel</button></div>
+          </div>
+        : <button className="btn block" style={{ marginTop: 10, background: 'transparent', color: 'var(--faint)', fontSize: 12.5 }} onClick={() => setConfirmDel(true)}><Trash2 size={14} />Remove user completely</button>
+      )}
     </>
   );
 }

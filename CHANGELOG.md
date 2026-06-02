@@ -4,6 +4,19 @@ Job control for **Giant Truss**. Truss, rigging & event-production job tracking.
 
 ---
 
+## v3.2.0 — "Cleaner" · 2026
+Layout cleanup, chart polish, and a rebuilt export.
+
+### Changed
+- **Bottom bar trimmed to four tabs** (Home · Jobs · ＋ · Projects · Stock) so the **＋ sits dead-center**. **Team** moved to a card on the home dashboard (tap it to manage).
+- **Job-volume chart blends into the page** now — no separate dark panel. Bars fade out at the left and right edges; scrolling brings them back. Tapping a day **snaps it to the exact center**.
+
+### Added
+- **Remove a user completely** from the Team screen (hard delete, with confirm) — their jobs become unassigned.
+- **Excel export rebuilt.** The **Main** tab is the single source of truth: a summary block on top, then every job across every department in one table (with a **Department** column), frozen header + filters. Each **department tab** is a filtered view of those same rows, clearly labelled. *(Static export for now; this becomes a live Google Sheet on Aashish's account later, where edits in Main will flow to the department views automatically.)*
+
+---
+
 ## v3.1.1 — "Polish" · 2026
 Fixes from first on-device testing, plus a requested feature.
 

@@ -83,6 +83,7 @@ export default function App() {
     addEmployee: (d) => { commit({ ...ref.current, users: [...ref.current.users, { id: uid('u'), ...d, role: 'user', active: true, createdAt: nowISO() }] }); setModal(null); },
     editEmployee: (id, p) => { commit({ ...ref.current, users: ref.current.users.map((u) => u.id === id ? { ...u, ...p } : u) }); setModal(null); },
     toggleActive: (id) => commit({ ...ref.current, users: ref.current.users.map((u) => (u.id === id && !u.isUniversal) ? { ...u, active: !u.active } : u) }),
+    deleteUser: (id) => { const u = ref.current.users.find((x) => x.id === id); if (!u || u.isUniversal) return; commit({ ...ref.current, users: ref.current.users.filter((x) => x.id !== id), jobs: ref.current.jobs.map((j) => j.assigneeId === id ? { ...j, assigneeId: null, operator: '' } : j), projects: ref.current.projects.map((p) => p.headId === id ? { ...p, headId: null } : p) }); setModal(null); },
     approveRequest: (req, d) => { commit({ ...ref.current, users: [...ref.current.users, { id: uid('u'), name: req.name, deptId: req.deptId, role: 'user', hasAccess: true, active: true, mustReset: true, createdAt: nowISO(), ...d }], pendingUsers: ref.current.pendingUsers.filter((p) => p.id !== req.id) }); setModal(null); },
     declineRequest: (id) => commit({ ...ref.current, pendingUsers: ref.current.pendingUsers.filter((p) => p.id !== id) }),
     // departments
@@ -111,6 +112,12 @@ export default function App() {
   const navAdmin = [{ id: 'home', icon: Home, label: 'Home' }, { id: 'jobs', icon: ClipboardList, label: 'Jobs', dot: approvals.length > 0 }, { id: 'projects', icon: Folder, label: 'Projects' }, { id: 'stock', icon: Boxes, label: 'Stock', dot: lowStock.length > 0 }, { id: 'team', icon: Users, label: 'Team', dot: reqCount > 0 }];
   const navUser = [{ id: 'home', icon: Home, label: 'Home' }, { id: 'settings', icon: Settings, label: 'Settings' }];
   const nav = isAdmin ? navAdmin : navUser;
+  // bottom bar shows 4 items (Team lives on the dashboard as a card); + is the true center
+  const bottomNav = isAdmin
+    ? [{ id: 'home', icon: Home, label: 'Home' }, { id: 'jobs', icon: ClipboardList, label: 'Jobs', dot: approvals.length > 0 }, { id: 'projects', icon: Folder, label: 'Projects' }, { id: 'stock', icon: Boxes, label: 'Stock', dot: lowStock.length > 0 }]
+    : navUser;
+  const bnLeft = bottomNav.slice(0, Math.ceil(bottomNav.length / 2));
+  const bnRight = bottomNav.slice(Math.ceil(bottomNav.length / 2));
   const screenTitle = (s, admin) => ({ home: admin ? 'Dashboard' : 'Home', jobs: 'Jobs', projects: 'Projects', stock: 'Inventory', team: 'Team', settings: 'Settings' }[s] || 'RIGGR');
 
   return (
@@ -173,13 +180,13 @@ export default function App() {
 
           {/* MOBILE / TABLET BOTTOM NAV with centered + */}
           <div className="bnav">
-            {nav.slice(0, Math.ceil(nav.length / 2)).map((n) => (
+            {bnLeft.map((n) => (
               <button key={n.id} className={`bn ${screen === n.id ? 'on' : ''}`} onClick={() => setScreen(n.id)}>
                 {n.dot && <span className="bdot" />}<n.icon size={21} />{n.label}
               </button>
             ))}
             <button className="bn-fab" onClick={() => setModal({ t: isAdmin ? 'job' : 'requestPick' })} aria-label="Create new"><Plus size={26} /></button>
-            {nav.slice(Math.ceil(nav.length / 2)).map((n) => (
+            {bnRight.map((n) => (
               <button key={n.id} className={`bn ${screen === n.id ? 'on' : ''}`} onClick={() => setScreen(n.id)}>
                 {n.dot && <span className="bdot" />}<n.icon size={21} />{n.label}
               </button>

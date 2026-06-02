@@ -7,6 +7,8 @@ import { Visualizer } from '../components/Visualizer.jsx';
 import { CalendarModal } from '../components/CalendarModal.jsx';
 import { PieChart, Pie, Cell, ResponsiveContainer, AreaChart, Area, Tooltip } from 'recharts';
 
+const reqCountLocal = (state) => (state.requests || []).length + state.pendingUsers.length;
+
 export function AdminHome({ state, deptById, projById, approvals, lowStock, ops }) {
   const [mode, setMode] = useState('day');
   const [selKey, setSelKey] = useState(currentKey('day'));
@@ -72,6 +74,20 @@ export function AdminHome({ state, deptById, projById, approvals, lowStock, ops 
             {state.pendingUsers.map((p) => <Attn key={p.id} c="#5fa83a" icon={UserPlus} t={`${p.name} requested access`} s={deptById(p.deptId).name} onClick={() => ops.setScreen('team')} />)}
             {lowStock.map((i) => <Attn key={i.id} c="#ef4444" icon={Boxes} t={`${i.name} running low`} s={`${i.qty} ${i.unit} left · min ${i.minLevel}`} onClick={() => ops.setScreen('stock')} />)}
           </>}
+
+          <div className="sec-h"><h2>Team</h2><span className="link" onClick={() => ops.setScreen('team')}>Manage <CR size={14} /></span></div>
+          <div className="card team-card" onClick={() => ops.setScreen('team')} style={{ cursor: 'pointer' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ display: 'flex' }}>
+                {state.users.filter((u) => u.role !== 'admin').slice(0, 4).map((u, i) => <div key={u.id} className="avt sm" style={{ background: deptById(u.deptId).color, color: '#fff', marginLeft: i ? -10 : 0, border: '2px solid var(--card)', width: 32, height: 32, borderRadius: 10 }}>{initials(u.name)}</div>)}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 16 }}>{state.users.filter((u) => u.role !== 'admin').length} members</div>
+                <div style={{ fontSize: 12.5, color: 'var(--muted)' }}>{state.departments.length} departments{reqCountLocal(state) > 0 ? ` · ${reqCountLocal(state)} pending` : ''}</div>
+              </div>
+              <CR size={18} color="var(--faint)" />
+            </div>
+          </div>
         </div>
       </div>
 
