@@ -122,6 +122,7 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .bnav{position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--line);
   display:flex; align-items:stretch; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05);
   height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px)); padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav::after{content:''; position:absolute; left:0; right:0; top:100%; height:80px; background:var(--card)}
 .bn{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:10px 0; color:var(--faint); cursor:pointer;
   font-size:10px; font-weight:700; background:none; border:none; transition:.15s; position:relative; min-width:0}
 .bn.on{color:var(--ink)}
