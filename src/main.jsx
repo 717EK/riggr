@@ -6,7 +6,8 @@ import App from './App.jsx';
 const reset = document.createElement('style');
 reset.textContent = `
   html, body, #root { margin: 0; padding: 0; height: 100%; }
-  body { overscroll-behavior-y: none; background: #e4e3da; }
+  body { overscroll-behavior-y: none; background: #1c1c1a; }
+  #root { height: 100dvh; overflow: hidden; }
   * { -webkit-tap-highlight-color: transparent; }
 `;
 document.head.appendChild(reset);

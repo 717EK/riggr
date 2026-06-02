@@ -23,6 +23,7 @@ export function Modals({ modal, state, deptById, projById, me, isAdmin, ops }) {
         {modal.t === 'dispatch' && <DispatchForm project={modal.project} items={state.inventory.items} onClose={close} onSave={(item, qty, note) => ops.recordMovement(item, 'out', qty, modal.project.name, note, true, modal.project.id)} />}
         {modal.t === 'return' && <ReturnForm project={modal.project} item={state.inventory.items.find((i) => i.id === modal.itemId)} max={modal.max} onClose={close} onSave={(qty) => ops.recordMovement(state.inventory.items.find((i) => i.id === modal.itemId), 'in', qty, modal.project.name, 'Returned from site', true, modal.project.id)} />}
         {modal.t === 'pin' && <PinForm me={me} users={users} onClose={close} onSave={(p) => { ops.changePin(p); close(); }} />}
+        {modal.t === 'profile' && <ProfileForm me={me} deptById={deptById} onClose={close} onSave={(d) => ops.updateProfile(d)} />}
         {modal.t === 'requestPick' && <RequestPicker onPick={(k) => ops.setModal({ t: k === 'job' ? 'requestJob' : 'requestProject' })} onClose={close} />}
         {modal.t === 'requestJob' && <JobForm requestMode departments={departments} users={users} projects={projects} myDept={me.deptId} onClose={close} onSave={(d, note) => ops.submitRequest('job', d, note)} />}
         {modal.t === 'requestProject' && <ProjectForm requestMode users={users} onClose={close} onSave={(d, note) => ops.submitRequest('project', d, note)} />}
@@ -285,6 +286,54 @@ export function PinForm({ me, users, onClose, onSave }) {
       <div className="field"><label>Confirm new PIN</label><input className="in" type="password" inputMode="numeric" maxLength={4} value={n2} onChange={(e) => { setErr(''); setN2(e.target.value.replace(/\D/g, '')); }} /></div>
       {err && <div className="lerr" style={{ marginTop: 0, marginBottom: 12 }}>{err}</div>}
       <button className="btn primary block" onClick={submit}>Update PIN</button>
+    </>
+  );
+}
+
+export function ProfileForm({ me, deptById, onClose, onSave }) {
+  const [name, setName] = useState(me.name || '');
+  const [avatar, setAvatar] = useState(me.avatar || '');
+  const [busy, setBusy] = useState(false);
+  const d = me.deptId ? deptById(me.deptId) : null;
+  const fileRef = useRef(null);
+
+  const onFile = (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    setBusy(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        // resize to max 256px square, center-crop, export as compact jpeg data URL
+        const S = 256; const canvas = document.createElement('canvas'); canvas.width = S; canvas.height = S;
+        const ctx = canvas.getContext('2d');
+        const min = Math.min(img.width, img.height); const sx = (img.width - min) / 2; const sy = (img.height - min) / 2;
+        ctx.drawImage(img, sx, sy, min, min, 0, 0, S, S);
+        setAvatar(canvas.toDataURL('image/jpeg', 0.82)); setBusy(false);
+      };
+      img.onerror = () => setBusy(false);
+      img.src = reader.result;
+    };
+    reader.onerror = () => setBusy(false);
+    reader.readAsDataURL(f);
+  };
+
+  return (
+    <>
+      <div className="sh-h"><h3>Edit profile</h3><button className="ico-btn sq" onClick={onClose}><X size={17} /></button></div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 18 }}>
+        <div className="avt lg" style={{ width: 92, height: 92, borderRadius: 28, background: d ? d.color : 'var(--hero)', position: 'relative', overflow: 'hidden' }}>
+          {avatar ? <img src={avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 30 }}>{(name || '?').split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase()}</span>}
+        </div>
+        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+          <button className="btn ghost sm" onClick={() => fileRef.current && fileRef.current.click()}>{busy ? 'Processing…' : (avatar ? 'Change photo' : 'Upload photo')}</button>
+          {avatar && <button className="btn ghost sm" style={{ color: '#dc2626' }} onClick={() => setAvatar('')}><Trash2 size={14} />Remove</button>}
+        </div>
+        <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: 'none' }} />
+      </div>
+      <div className="field"><label>Display name</label><input className="in" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" /></div>
+      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14 }}>Username <b>@{me.username}</b> stays the same — only your display name and photo change.</div>
+      <button className="btn primary block" disabled={!name.trim() || busy} onClick={() => onSave({ name: name.trim(), avatar })}>Save profile</button>
     </>
   );
 }

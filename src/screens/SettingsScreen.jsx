@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { Home, ClipboardList, Boxes, Users, Bell, Plus, Cal, ChevronLeft, ChevronRight, Search, LogOut, CheckCircle2, RotateCcw, XCircle, Play, Pause, Flag, Clock, Download, Pencil, Trash2, X, ArrowUpRight, ArrowDownRight, AlertTriangle, UserPlus, Check, KeyRound, ShieldCheck, Layers, CornerDownLeft, Delete, Folder, Settings, Sun, Moon, Palette, MapPin, HardHat, Truck, Activity, Package, Inbox, CR } from '../lib/icons.js';
 import { PRIORITIES, STATUS, CATS, ACCENTS, APP_NAME, APP_VERSION, APP_CODENAME, CHANGELOG } from '../data/constants.js';
 import { uid, nowISO, dk, parseDK, addDays, startOfWeek, fmtT, fmtD, WD, MO, MOABBR, initials, buildBuckets, currentKey, jobInBucket, genUsername, genPin } from '../lib/helpers.js';
-import { Logo } from '../components/Bits.jsx';
+import { Logo, Avatar } from '../components/Bits.jsx';
 
 export function SettingsScreen({ me, deptById, ops, pref, setPrefs }) {
   const [about, setAbout] = useState(false);
@@ -10,8 +10,9 @@ export function SettingsScreen({ me, deptById, ops, pref, setPrefs }) {
   return (
     <>
       <div className="sec-h" style={{ marginTop: 6 }}><h2>Settings</h2></div>
-      <div className="card" style={{ textAlign: 'center', padding: 22, marginBottom: 16 }}>
-        <div className="avt lg" style={{ margin: '0 auto 12px', background: d ? d.color : 'var(--hero)' }}>{initials(me.name)}</div>
+      <div className="card" style={{ textAlign: 'center', padding: 22, marginBottom: 16, position: 'relative', cursor: 'pointer' }} onClick={() => ops.setModal({ t: 'profile' })}>
+        <button className="ico-btn sq" style={{ position: 'absolute', top: 14, right: 14 }}><Pencil size={15} /></button>
+        <Avatar user={me} className="lg" style={{ margin: '0 auto 12px', background: d ? d.color : 'var(--hero)' }} />
         <div className="disp" style={{ fontSize: 20, fontWeight: 700 }}>{me.name}</div>
         <div style={{ color: 'var(--muted)', fontSize: 13.5, marginTop: 2 }}>{me.role === 'admin' ? 'Administrator' : d?.name} · @{me.username}{me.isUniversal ? ' · owner' : ''}</div>
       </div>

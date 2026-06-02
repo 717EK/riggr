@@ -8,6 +8,13 @@ export function Logo({ size = 26 }) {
 }
 export const greet = () => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'; };
 
+export function Avatar({ user, size, className = '', style = {}, onClick }) {
+  const cls = `avt ${className}`;
+  const st = size ? { width: size, height: size, ...style } : style;
+  if (user && user.avatar) return <div className={cls} style={st} onClick={onClick}><img src={user.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>;
+  return <div className={cls} style={st} onClick={onClick}>{initials(user ? user.name : '?')}</div>;
+}
+
 export function Ring({ pct }) { const r = 36, c = 2 * Math.PI * r, off = c - (pct / 100) * c; return <div className="ring"><svg width="84" height="84" style={{ transform: 'rotate(-90deg)' }}><circle cx="42" cy="42" r={r} fill="none" stroke="rgba(255,255,255,.14)" strokeWidth="8" /><circle cx="42" cy="42" r={r} fill="none" stroke="var(--accent)" strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={off} style={{ transition: 'stroke-dashoffset .6s' }} /></svg><div className="pct" style={{ color: 'var(--hero-text)' }}>{pct}%</div></div>; }
 export function Spill({ cls = '', icon: I, v, k, onClick }) { return <div className={`spill ${cls}`} onClick={onClick}><I size={20} className="ic2" style={{ color: 'var(--muted)' }} /><div><div className="v">{v}</div><div className="k">{k}</div></div></div>; }
 export function Attn({ c, icon: I, t, s, onClick }) { return <div className="attn" onClick={onClick}><div className="a-ic" style={{ background: `color-mix(in srgb, ${c} 14%, transparent)`, color: c }}><I size={18} /></div><div style={{ flex: 1 }}><div className="a-t">{t}</div><div className="a-s">{s}</div></div><CR size={17} color="var(--faint)" /></div>; }

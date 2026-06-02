@@ -31,6 +31,9 @@ export function AdminHome({ state, deptById, projById, approvals, lowStock, ops 
   const pref = ops.pref || {};
   const [editing, setEditing] = useState(false);
   const dragIx = useRef(null);
+  const holdTimer = useRef(null);
+  const startHold = () => { if (editing) return; holdTimer.current = setTimeout(() => setEditing(true), 500); };
+  const cancelHold = () => { if (holdTimer.current) { clearTimeout(holdTimer.current); holdTimer.current = null; } };
 
   const DEFAULT_ORDER = ['volume', 'selected', 'overview', 'stats', 'attention', 'team', 'insights', 'trend'];
   const order = (() => {
@@ -134,10 +137,10 @@ export function AdminHome({ state, deptById, projById, approvals, lowStock, ops 
         {state.projects.map((p) => <div key={p.id} className={`ptab ${projFilter === p.id ? 'on' : ''}`} onClick={() => setProjFilter(p.id)}><span className="dept-dot" style={{ background: p.color }} />{p.name}</div>)}
       </div>
 
-      <div className="dash-bar">
-        <h2 style={{ fontSize: 15, color: 'var(--muted)' }}>{editing ? 'Drag or use arrows to reorder' : ''}</h2>
-        <button className={`btn ghost sm ${editing ? '' : ''}`} onClick={() => setEditing(!editing)} style={editing ? { background: 'var(--hero)', color: 'var(--hero-text)' } : {}}>{editing ? <><Check size={14} />Done</> : <><Layers size={14} />Edit layout</>}</button>
-      </div>
+      {editing && <div className="dash-bar">
+        <span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 600 }}>Drag cards or use arrows to reorder</span>
+        <button className="btn primary sm" onClick={() => setEditing(false)}><Check size={14} />Done</button>
+      </div>}
 
       <div className={`dash-flow ${editing ? 'editing' : ''}`}>
         {visible.map((key, i) => (
@@ -148,6 +151,10 @@ export function AdminHome({ state, deptById, projById, approvals, lowStock, ops 
             onDragStart={() => { dragIx.current = i; }}
             onDragOver={(e) => { if (editing) e.preventDefault(); }}
             onDrop={() => onDrop(key)}
+            onPointerDown={startHold}
+            onPointerUp={cancelHold}
+            onPointerLeave={cancelHold}
+            onPointerMove={cancelHold}
           >
             {editing && (
               <div className="dash-handle">

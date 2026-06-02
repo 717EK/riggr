@@ -49,20 +49,21 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
   padding:6px 11px; border-radius:9px; cursor:pointer; transition:.15s}
 .seg-modes button.on{background:var(--hero); color:var(--hero-text)}
 .viz-plot{position:relative}
-.bars{display:flex; align-items:stretch; height:184px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory;
+.bars{display:flex; align-items:flex-end; height:188px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory;
   padding:0 calc(50% - 21px); scrollbar-width:none; position:relative; z-index:2;
   touch-action:pan-x; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
 .bars::-webkit-scrollbar{display:none}
 .barwrap{flex:0 0 42px; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; cursor:pointer}
-.bar-col{flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-height:0; padding-bottom:8px}
-.bar{width:22px; border-radius:8px 8px 5px 5px; background:var(--olive); transition:height .35s,background .25s,width .2s; min-height:7px; flex-shrink:0}
+.bar-col{position:relative; width:100%; height:130px; flex-shrink:0}
+.bar-n{position:absolute; left:0; right:0; bottom:0; font-family:'Bricolage Grotesque'; font-size:12px; font-weight:700; color:var(--faint); text-align:center; height:15px; pointer-events:none}
+.bar-n.show{color:var(--text)}
+.bar{position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:22px; border-radius:8px 8px 5px 5px; background:var(--olive);
+  transition:height .35s,background .25s,width .2s; min-height:7px}
 .bar.on{background:var(--accent)}
 .bar.sel{width:30px; box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent)}
-.bar-n{font-family:'Bricolage Grotesque'; font-size:12px; font-weight:700; color:var(--faint); margin-bottom:6px; height:15px; flex-shrink:0}
-.bar-n.show{color:var(--text)}
-.bar-x{font-size:9.5px; font-weight:700; color:var(--faint); text-align:center; line-height:1.25; height:44px; padding:6px 6px 0; border-radius:10px; transition:.15s; flex-shrink:0; display:flex; flex-direction:column; align-items:center}
+.bar-x{font-size:9.5px; font-weight:700; color:var(--faint); text-align:center; line-height:1.2; height:42px; padding:6px 6px 0; border-radius:10px; transition:.15s; flex-shrink:0; margin-top:8px}
 .bar-x.sel{color:var(--accent-ink); background:var(--accent)}
 .viz-mid{position:absolute; left:50%; top:8px; bottom:52px; width:2px; transform:translateX(-50%); z-index:1;
   background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 35%,transparent),transparent)}
@@ -118,13 +119,14 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .btn.sm{padding:8px 12px; font-size:12.5px; border-radius:11px}
 .btn.block{width:100%}
 
-.bnav{position:absolute; bottom:0; left:0; right:0; min-height:var(--nav-h); padding:0 4px; background:var(--card);
-  border-top:1px solid var(--line); display:flex; align-items:flex-start; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05)}
-.bn{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:13px 0 calc(6px + env(safe-area-inset-bottom,0px)); color:var(--faint); cursor:pointer;
+.bnav{position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--line);
+  display:flex; align-items:stretch; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05);
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px)); padding-bottom:env(safe-area-inset-bottom,0px)}
+.bn{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:10px 0; color:var(--faint); cursor:pointer;
   font-size:10px; font-weight:700; background:none; border:none; transition:.15s; position:relative; min-width:0}
 .bn.on{color:var(--ink)}
-.bn .bdot{position:absolute; top:8px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
-.bn-fab{flex:0 0 auto; width:66px; height:66px; margin:-22px 8px 0; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+.bn .bdot{position:absolute; top:9px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
+.bn-fab{flex:0 0 auto; width:64px; height:64px; margin:-24px 8px 0; border-radius:50%; background:var(--accent); color:var(--accent-ink);
   border:5px solid var(--app); display:grid; place-items:center; cursor:pointer; box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 60%,transparent); transition:.15s; align-self:flex-start}
 .bn-fab:active{transform:scale(.9)}
 

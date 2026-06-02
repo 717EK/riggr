@@ -7,7 +7,7 @@ import { seed } from './data/seed.js';
 import { exportXlsx } from './data/exportXlsx.js';
 import { themeVars } from './lib/theme.js';
 import { CSS } from './styles.js';
-import { Logo, greet, Ring, Spill, Attn, MiniJob, Empty, Row } from './components/Bits.jsx';
+import { Logo, greet, Ring, Spill, Attn, MiniJob, Empty, Row, Avatar } from './components/Bits.jsx';
 import { Visualizer } from './components/Visualizer.jsx';
 import { CalendarModal } from './components/CalendarModal.jsx';
 import { NotifPanel } from './components/NotifPanel.jsx';
@@ -104,6 +104,7 @@ export default function App() {
       commit({ ...ref.current, inventory: { items, movements: [mv, ...ref.current.inventory.movements] } }); setModal(null);
     },
     changePin: (pin) => commit({ ...ref.current, users: ref.current.users.map((u) => u.id === me.id ? { ...u, pin } : u) }),
+    updateProfile: (d) => { commit({ ...ref.current, users: ref.current.users.map((u) => u.id === me.id ? { ...u, ...d } : u) }); setModal(null); },
     markRead: () => commit({ ...ref.current, notifications: ref.current.notifications.map((n) => (n.toUser === me.id || n.toDept === me.deptId) ? { ...n, read: true } : n) }),
     logout: () => { setSession(null); setScreen('home'); setModal(null); },
     pref, setPrefs,
@@ -139,7 +140,7 @@ export default function App() {
           <div className="sb-foot">
             <button className={`sb-item ${screen === 'settings' ? 'on' : ''}`} onClick={() => setScreen('settings')}><Settings size={20} /><span>Settings</span></button>
             <button className="sb-user" onClick={() => setScreen('settings')}>
-              <div className="avt sm" style={{ background: isAdmin ? 'var(--hero)' : deptById(me.deptId).color }}>{initials(me.name)}</div>
+              <Avatar user={me} className="sm" style={{ background: isAdmin ? 'var(--hero)' : deptById(me.deptId).color }} />
               <div className="sb-user-meta"><div className="sb-user-name">{me.name}</div><div className="sb-user-role">{isAdmin ? 'Owner' : deptById(me.deptId).name}</div></div>
               <button className="ico-btn sq" onClick={(e) => { e.stopPropagation(); ops.logout(); }}><LogOut size={15} /></button>
             </button>
@@ -150,7 +151,7 @@ export default function App() {
         <div className="main">
           {/* MOBILE / TABLET HEADER */}
           <div className="hdr">
-            <div className="avt" onClick={() => setScreen('settings')} style={{ cursor: 'pointer' }}>{initials(me.name)}</div>
+            <Avatar user={me} onClick={() => setScreen('settings')} style={{ cursor: 'pointer' }} />
             <div className="hi">
               <div className="hello">{greet()}{isAdmin ? '' : `, ${me.name.split(' ')[0]}`}</div>
               <div className="name">{isAdmin ? me.name : deptById(me.deptId).name}</div>

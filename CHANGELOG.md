@@ -4,6 +4,20 @@ Job control for **Giant Truss**. Truss, rigging & event-production job tracking.
 
 ---
 
+## v3.4.0 — "Profile & Fixes" · 2026
+Profile editing, press-and-hold reorder, and the footer/chart fixes done properly.
+
+### Added
+- **Profile editor** in Settings — tap your profile card to **upload a photo** (auto-cropped square) and **change your display name**. Your photo then shows in the header and sidebar.
+- **Press and hold any dashboard card** to enter reorder mode (the separate "Edit layout" button is gone). Tap **Done** to finish.
+
+### Fixed
+- **Footer** rebuilt so its background reaches the true bottom edge of the screen, filling the safe area — no more gap below the tabs, in either theme.
+- **Chart date labels** are now locked to a fixed baseline: the bar grows in a fixed-height zone above them, so every date lines up no matter how many jobs that day has.
+- **Selected bar** no longer overshoots the top of the chart.
+
+---
+
 ## v3.3.0 — "Your Layout" · 2026
 Personalisation, self-updating, and fixes from on-device testing.
 
