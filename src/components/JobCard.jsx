@@ -7,15 +7,17 @@ export function JobCard({ job: j, deptById, projById, mode, me, ops }) {
   const d = deptById(j.deptId), st = STATUS[j.status], pr = j.projectId && projById ? projById(j.projectId) : null;
   return (
     <div className="jc">
-      <div className="r1"><span className="dept-dot" style={{ background: d.color }} /><span className="jno">{j.jobNo}</span><span className={`prio ${j.priority}`}>{j.priority}</span><span style={{ flex: 1 }} /><span className="chip" style={{ '--cc': st.c }}>{st.label}</span></div>
-      <div className="ttl">{j.customer || 'Untitled'}</div>
-      <div className="sub">{j.product} · {d.name}{j.process ? ` · ${j.process}` : ''}{j.qty ? ` · Qty ${j.qty}` : ''}</div>
-      {pr && <div><span className="pjtag" style={{ '--cc': pr.color }}><Folder size={11} />{pr.name}</span></div>}
-      <div className="meta">
-        <div className="it"><span className="lab">Assigned</span><span className="val">{j.assigneeId ? <span className="assignee"><span className="avt sm" style={{ width: 20, height: 20, borderRadius: 6, fontSize: 8, background: d.color }}>{initials(j.operator || '?')}</span>{(j.operator || '').split(' ')[0] || 'User'}</span> : <span className="assignee"><Users size={13} /> All {d.name}</span>}</span></div>
-        <div className="it"><span className="lab">Start</span><span className="val">{fmtT(j.startTime)}</span></div>
-        <div className="it"><span className="lab">End</span><span className="val">{fmtT(j.endTime)}</span></div>
-        <div className="it"><span className="lab">Date</span><span className="val">{fmtD(j.date)}</span></div>
+      <div className="jc-tap" onClick={() => ops.setModal({ t: 'jobview', job: j })} style={{ cursor: 'pointer' }}>
+        <div className="r1"><span className="dept-dot" style={{ background: d.color }} /><span className="jno">{j.jobNo}</span><span className={`prio ${j.priority}`}>{j.priority}</span><span style={{ flex: 1 }} /><span className="chip" style={{ '--cc': st.c }}>{st.label}</span></div>
+        <div className="ttl">{j.customer || 'Untitled'}</div>
+        <div className="sub">{j.product} · {d.name}{j.process ? ` · ${j.process}` : ''}{j.qty ? ` · Qty ${j.qty}` : ''}</div>
+        {pr && <div><span className="pjtag" style={{ '--cc': pr.color }}><Folder size={11} />{pr.name}</span></div>}
+        <div className="meta">
+          <div className="it"><span className="lab">Assigned</span><span className="val">{j.assigneeId ? <span className="assignee"><span className="avt sm" style={{ width: 20, height: 20, borderRadius: 6, fontSize: 8, background: d.color }}>{initials(j.operator || '?')}</span>{(j.operator || '').split(' ')[0] || 'User'}</span> : <span className="assignee"><Users size={13} /> All {d.name}</span>}</span></div>
+          <div className="it"><span className="lab">Start</span><span className="val">{fmtT(j.startTime)}</span></div>
+          <div className="it"><span className="lab">End</span><span className="val">{fmtT(j.endTime)}</span></div>
+          <div className="it"><span className="lab">Date</span><span className="val">{fmtD(j.date)}</span></div>
+        </div>
       </div>
       {mode === 'user' && <div className="acts">
         {j.status === 'pending' && <button className="btn go" onClick={() => ops.startJob(j)}><Play size={15} />Start</button>}

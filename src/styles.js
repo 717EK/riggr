@@ -1,16 +1,21 @@
 export const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
-.gt{font-family:'Hanken Grotesk',system-ui,sans-serif; color:var(--text); min-height:100vh; width:100%;
-  background:var(--bg); display:flex; justify-content:center; transition:background .3s}
-.shell{width:100%; max-width:480px; min-height:100vh; background:var(--app); position:relative;
-  box-shadow:0 0 80px rgba(0,0,0,.14); display:flex; flex-direction:column; transition:background .3s}
-.scroll{flex:1; overflow-y:auto; padding:0 16px 116px}
+:root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:74px; }
+.gt{font-family:'Hanken Grotesk',system-ui,sans-serif; color:var(--text); width:100%; height:100vh; height:100dvh;
+  background:var(--bg); display:flex; justify-content:center; transition:background .3s; overflow:hidden}
+.shell{width:100%; max-width:480px; height:100%; background:var(--app); position:relative;
+  box-shadow:0 0 80px rgba(0,0,0,.14); display:flex; flex-direction:column; transition:background .3s; overflow:hidden}
+.main{flex:1; display:flex; flex-direction:column; min-width:0; min-height:0; position:relative}
+.scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain}
+.content{padding:0 16px calc(var(--nav-h) + var(--safe-bottom) + 24px)}
+.sidebar{display:none}
+.topbar{display:none}
 .disp{font-family:'Bricolage Grotesque',sans-serif}
 h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 
-.hdr{display:flex; align-items:center; gap:11px; padding:18px 16px 12px; position:sticky; top:0; z-index:20;
-  background:linear-gradient(180deg,var(--app) 78%,transparent)}
+.hdr{display:flex; align-items:center; gap:11px; padding:calc(var(--safe-top) + 16px) 16px 12px; position:sticky; top:0; z-index:20;
+  background:linear-gradient(180deg,var(--app) 82%,transparent)}
 .avt{width:44px; height:44px; border-radius:15px; background:var(--hero); color:var(--hero-text); display:grid; place-items:center;
   font-family:'Bricolage Grotesque'; font-weight:700; font-size:16px; flex-shrink:0; overflow:hidden}
 .avt.sm{width:30px; height:30px; border-radius:9px; font-size:11px}
@@ -110,15 +115,15 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .btn.sm{padding:8px 12px; font-size:12.5px; border-radius:11px}
 .btn.block{width:100%}
 
-.fab{position:absolute; right:16px; bottom:94px; width:56px; height:56px; border-radius:19px; background:var(--accent); color:var(--accent-ink);
-  border:none; display:grid; place-items:center; cursor:pointer; z-index:25; box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 55%,transparent); transition:.15s}
-.fab:active{transform:scale(.92)}
-.bnav{position:absolute; bottom:0; left:0; right:0; height:76px; background:var(--card); border-top:1px solid var(--line);
-  display:flex; align-items:center; padding:0 6px 12px; z-index:24}
-.bn{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 0; color:var(--faint); cursor:pointer;
-  font-size:10px; font-weight:700; background:none; border:none; transition:.15s; position:relative}
+.bnav{position:absolute; bottom:0; left:0; right:0; min-height:var(--nav-h); padding:0 4px calc(var(--safe-bottom) + 8px); background:var(--card);
+  border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05)}
+.bn{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 0 4px; color:var(--faint); cursor:pointer;
+  font-size:10px; font-weight:700; background:none; border:none; transition:.15s; position:relative; min-width:0}
 .bn.on{color:var(--ink)}
-.bn .bdot{position:absolute; top:3px; right:calc(50% - 17px); width:7px; height:7px; border-radius:50%; background:var(--accent)}
+.bn .bdot{position:absolute; top:5px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
+.bn-fab{flex:0 0 auto; width:58px; height:58px; margin:0 6px -14px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+  border:4px solid var(--app); display:grid; place-items:center; cursor:pointer; box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 55%,transparent); transition:.15s}
+.bn-fab:active{transform:scale(.9)}
 
 .empty{text-align:center; padding:38px 16px; color:var(--faint)}
 .empty .e-ic{width:54px; height:54px; border-radius:18px; background:var(--card); box-shadow:var(--shadow-sm); display:grid; place-items:center; margin:0 auto 12px; color:var(--faint)}
@@ -225,4 +230,73 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 
 .logobars{display:flex; align-items:flex-end; gap:2.5px}
 .logobars i{width:4px; border-radius:2px; background:var(--accent); display:block}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+
+/* TABLET (portrait) — widen the column, keep bottom nav */
+@media (min-width: 768px) {
+  .shell{ max-width: 760px; }
+  .content{ padding-left: 28px; padding-right: 28px; }
+  .hdr{ padding-left: 28px; padding-right: 28px; }
+  /* two-up grids on tablet */
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
+  .grid-2 > .sec-h{ grid-column:1 / -1; }
+}
+
+/* DESKTOP / iPad landscape — sidebar + multi-column, no bottom nav */
+@media (min-width: 1024px) {
+  .gt{ justify-content:stretch; }
+  .shell{ max-width:none; flex-direction:row; box-shadow:none; }
+
+  .sidebar{ display:flex; flex-direction:column; width:248px; flex-shrink:0; height:100%;
+    background:var(--card); border-right:1px solid var(--line); padding:22px 16px calc(var(--safe-bottom) + 16px); gap:6px; }
+  .sb-brand{ display:flex; align-items:center; gap:10px; padding:6px 10px 18px; }
+  .sb-word{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:22px; letter-spacing:.04em; }
+  .sb-new{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; margin-bottom:14px;
+    border:none; border-radius:15px; background:var(--accent); color:var(--accent-ink); font-family:'Hanken Grotesk'; font-weight:700; font-size:14.5px; cursor:pointer; transition:.15s; }
+  .sb-new:active{ transform:scale(.98); }
+  .sb-nav{ display:flex; flex-direction:column; gap:3px; }
+  .sb-item{ display:flex; align-items:center; gap:12px; width:100%; padding:11px 13px; border:none; background:none; cursor:pointer;
+    border-radius:13px; font-family:'Hanken Grotesk'; font-weight:600; font-size:14.5px; color:var(--muted); transition:.15s; position:relative; text-align:left; }
+  .sb-item:hover{ background:var(--card2); color:var(--text); }
+  .sb-item.on{ background:var(--hero); color:var(--hero-text); }
+  .sb-item .sb-dot{ position:absolute; left:28px; top:10px; width:7px; height:7px; border-radius:50%; background:var(--accent); }
+  .sb-item > span{ flex:1; }
+  .sb-foot{ margin-top:auto; display:flex; flex-direction:column; gap:6px; padding-top:12px; border-top:1px solid var(--line); }
+  .sb-user{ display:flex; align-items:center; gap:10px; width:100%; padding:8px; border:none; background:none; cursor:pointer; border-radius:13px; transition:.15s; }
+  .sb-user:hover{ background:var(--card2); }
+  .sb-user-meta{ flex:1; min-width:0; text-align:left; }
+  .sb-user-name{ font-weight:700; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sb-user-role{ font-size:11.5px; color:var(--muted); }
+
+  .main{ background:var(--app); }
+  .hdr{ display:none; }
+  .bnav{ display:none; }
+  .topbar{ display:flex; align-items:center; gap:12px; padding:22px 32px 14px; position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg,var(--app) 82%,transparent); }
+  .tb-title{ font-family:'Bricolage Grotesque'; font-weight:700; font-size:26px; }
+
+  .scroll{ display:flex; justify-content:center; }
+  .content{ width:100%; max-width:1080px; padding:4px 32px 48px; }
+
+  /* desktop dashboard: two-column masonry-ish using columns where marked */
+  .dash-grid{ display:grid; grid-template-columns:1.6fr 1fr; gap:20px; align-items:start; }
+  .dash-grid > .sec-h{ grid-column:auto; }
+  .dash-wide{ grid-column:1 / -1; }
+
+  /* cards/lists get a touch more breathing room */
+  .jc{ padding:17px; }
+  .pjcard{ padding:20px; }
+
+  /* projects & stock lists become two columns on wide screens */
+  .col-2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start; }
+  .col-2 > .sec-h, .col-2 > .pill-tabs, .col-2 > .empty{ grid-column:1 / -1; }
+}
+
+/* LARGE DESKTOP — allow three-column lists */
+@media (min-width: 1440px) {
+  .content{ max-width:1240px; }
+  .col-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; align-items:start; }
+  .col-3 > .sec-h, .col-3 > .pill-tabs, .col-3 > .empty{ grid-column:1 / -1; }
+}
 `;

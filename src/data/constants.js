@@ -1,10 +1,11 @@
 export const APP_NAME = 'RIGGR';
-export const APP_VERSION = '3.0.0';
+export const APP_VERSION = '3.1.0';
 export const APP_CODENAME = 'Giant Truss';
 export const STATE_KEY = 'riggr:state:v3';
 export const PREFS_KEY = 'riggr:prefs:v1';
 
 export const CHANGELOG = [
+  { v: '3.1.0', name: 'Any Screen', items: ['Responsive layout — phone, tablet, iPad, desktop', 'Desktop sidebar + multi-column dashboard', 'Pinned bottom bar with centred ＋ to create jobs/projects', 'Tap any job to open its full detail', 'Safe-area padding so header clears the notch'] },
   { v: '3.0.0', name: 'Giant Truss', items: ['Branded RIGGR for Giant Truss · Aashish set as permanent universal admin', 'Job-volume visualizer: scrollable centered bars, Day / Week / Month', 'Projects with per-project stats + dashboard project filter', 'Rental projects: dispatch / return / on-site gear tracking', 'Request-to-generate: crew can request jobs & projects, admin approves', 'Light / dark theme + accent colour picker', 'Reference floating-panel UI redesign'] },
   { v: '2.0.0', name: 'Conneq CRM', items: ['Mobile CRM redesign', 'Inventory, employees, self-registration, editable departments'] },
   { v: '1.0.0', name: 'Control Room', items: ['First build · PIN login · six-state job lifecycle · .xlsx export'] },

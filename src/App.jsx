@@ -109,40 +109,80 @@ export default function App() {
   const navAdmin = [{ id: 'home', icon: Home, label: 'Home' }, { id: 'jobs', icon: ClipboardList, label: 'Jobs', dot: approvals.length > 0 }, { id: 'projects', icon: Folder, label: 'Projects' }, { id: 'stock', icon: Boxes, label: 'Stock', dot: lowStock.length > 0 }, { id: 'team', icon: Users, label: 'Team', dot: reqCount > 0 }];
   const navUser = [{ id: 'home', icon: Home, label: 'Home' }, { id: 'settings', icon: Settings, label: 'Settings' }];
   const nav = isAdmin ? navAdmin : navUser;
-  const showFab = screen === 'home' || screen === 'jobs' || screen === 'projects';
+  const screenTitle = (s, admin) => ({ home: admin ? 'Dashboard' : 'Home', jobs: 'Jobs', projects: 'Projects', stock: 'Inventory', team: 'Team', settings: 'Settings' }[s] || 'RIGGR');
 
   return (
     <div className="gt" style={vars}>
       <div className="shell">
-        <div className="hdr">
-          <div className="avt" onClick={() => setScreen('settings')} style={{ cursor: 'pointer' }}>{initials(me.name)}</div>
-          <div className="hi">
-            <div className="hello">{greet()}{isAdmin ? '' : `, ${me.name.split(' ')[0]}`}</div>
-            <div className="name">{isAdmin ? me.name : deptById(me.deptId).name}</div>
-          </div>
-          <button className="ico-btn" onClick={() => setPanel(true)}><Bell size={19} />{unread > 0 && <span className="ndot">{unread}</span>}</button>
-          <button className="ico-btn" onClick={() => setScreen('settings')}><Settings size={19} /></button>
-        </div>
 
-        <div className="scroll">
-          {isAdmin && screen === 'home' && <AdminHome state={state} deptById={deptById} projById={projById} approvals={approvals} lowStock={lowStock} ops={ops} />}
-          {isAdmin && screen === 'jobs' && <JobsScreen state={state} deptById={deptById} projById={projById} approvals={approvals} ops={ops} />}
-          {isAdmin && screen === 'projects' && <ProjectsScreen state={state} deptById={deptById} projById={projById} ops={ops} />}
-          {isAdmin && screen === 'stock' && <StockScreen state={state} deptById={deptById} ops={ops} />}
-          {isAdmin && screen === 'team' && <TeamScreen state={state} deptById={deptById} ops={ops} me={me} />}
-          {screen === 'settings' && <SettingsScreen me={me} deptById={deptById} ops={ops} pref={pref} setPrefs={setPrefs} />}
-          {!isAdmin && screen === 'home' && <UserHome jobs={visibleJobs} me={me} deptById={deptById} projById={projById} ops={ops} />}
-          <div className="foot">{APP_NAME} v{APP_VERSION} · {new Date().toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' })}<br />Preview data stays in this browser · production syncs to Google Sheets</div>
-        </div>
-
-        {showFab && <button className="fab" onClick={() => setModal({ t: isAdmin ? 'job' : 'requestPick' })}><Plus size={26} /></button>}
-
-        <div className="bnav">
-          {nav.map((n) => (
-            <button key={n.id} className={`bn ${screen === n.id ? 'on' : ''}`} onClick={() => setScreen(n.id)}>
-              {n.dot && <span className="bdot" />}<n.icon size={21} />{n.label}
+        {/* DESKTOP SIDEBAR */}
+        <aside className="sidebar">
+          <div className="sb-brand"><Logo size={26} /><span className="sb-word">{APP_NAME}</span></div>
+          <button className="sb-new" onClick={() => setModal({ t: isAdmin ? 'job' : 'requestPick' })}><Plus size={20} /><span>{isAdmin ? 'New job' : 'New request'}</span></button>
+          <nav className="sb-nav">
+            {nav.map((n) => (
+              <button key={n.id} className={`sb-item ${screen === n.id ? 'on' : ''}`} onClick={() => setScreen(n.id)}>
+                <n.icon size={20} /><span>{n.label}</span>{n.dot && <span className="sb-dot" />}
+              </button>
+            ))}
+          </nav>
+          <div className="sb-foot">
+            <button className={`sb-item ${screen === 'settings' ? 'on' : ''}`} onClick={() => setScreen('settings')}><Settings size={20} /><span>Settings</span></button>
+            <button className="sb-user" onClick={() => setScreen('settings')}>
+              <div className="avt sm" style={{ background: isAdmin ? 'var(--hero)' : deptById(me.deptId).color }}>{initials(me.name)}</div>
+              <div className="sb-user-meta"><div className="sb-user-name">{me.name}</div><div className="sb-user-role">{isAdmin ? 'Owner' : deptById(me.deptId).name}</div></div>
+              <button className="ico-btn sq" onClick={(e) => { e.stopPropagation(); ops.logout(); }}><LogOut size={15} /></button>
             </button>
-          ))}
+          </div>
+        </aside>
+
+        {/* MAIN COLUMN */}
+        <div className="main">
+          {/* MOBILE / TABLET HEADER */}
+          <div className="hdr">
+            <div className="avt" onClick={() => setScreen('settings')} style={{ cursor: 'pointer' }}>{initials(me.name)}</div>
+            <div className="hi">
+              <div className="hello">{greet()}{isAdmin ? '' : `, ${me.name.split(' ')[0]}`}</div>
+              <div className="name">{isAdmin ? me.name : deptById(me.deptId).name}</div>
+            </div>
+            <button className="ico-btn" onClick={() => setPanel(true)}><Bell size={19} />{unread > 0 && <span className="ndot">{unread}</span>}</button>
+            <button className="ico-btn" onClick={() => setScreen('settings')}><Settings size={19} /></button>
+          </div>
+
+          {/* DESKTOP TOPBAR */}
+          <div className="topbar">
+            <div className="tb-title">{screenTitle(screen, isAdmin)}</div>
+            <div style={{ flex: 1 }} />
+            <button className="ico-btn" onClick={() => setPanel(true)}><Bell size={19} />{unread > 0 && <span className="ndot">{unread}</span>}</button>
+          </div>
+
+          <div className="scroll">
+            <div className="content">
+              {isAdmin && screen === 'home' && <AdminHome state={state} deptById={deptById} projById={projById} approvals={approvals} lowStock={lowStock} ops={ops} />}
+              {isAdmin && screen === 'jobs' && <JobsScreen state={state} deptById={deptById} projById={projById} approvals={approvals} ops={ops} />}
+              {isAdmin && screen === 'projects' && <ProjectsScreen state={state} deptById={deptById} projById={projById} ops={ops} />}
+              {isAdmin && screen === 'stock' && <StockScreen state={state} deptById={deptById} ops={ops} />}
+              {isAdmin && screen === 'team' && <TeamScreen state={state} deptById={deptById} ops={ops} me={me} />}
+              {screen === 'settings' && <SettingsScreen me={me} deptById={deptById} ops={ops} pref={pref} setPrefs={setPrefs} />}
+              {!isAdmin && screen === 'home' && <UserHome jobs={visibleJobs} me={me} deptById={deptById} projById={projById} ops={ops} />}
+              <div className="foot">{APP_NAME} v{APP_VERSION} · {new Date().toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' })}<br />Preview data stays in this browser · production syncs to Google Sheets</div>
+            </div>
+          </div>
+
+          {/* MOBILE / TABLET BOTTOM NAV with centered + */}
+          <div className="bnav">
+            {nav.slice(0, Math.ceil(nav.length / 2)).map((n) => (
+              <button key={n.id} className={`bn ${screen === n.id ? 'on' : ''}`} onClick={() => setScreen(n.id)}>
+                {n.dot && <span className="bdot" />}<n.icon size={21} />{n.label}
+              </button>
+            ))}
+            <button className="bn-fab" onClick={() => setModal({ t: isAdmin ? 'job' : 'requestPick' })} aria-label="Create new"><Plus size={26} /></button>
+            {nav.slice(Math.ceil(nav.length / 2)).map((n) => (
+              <button key={n.id} className={`bn ${screen === n.id ? 'on' : ''}`} onClick={() => setScreen(n.id)}>
+                {n.dot && <span className="bdot" />}<n.icon size={21} />{n.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {panel && <NotifPanel notifs={myNotifs} onClose={() => setPanel(false)} onRead={ops.markRead} />}

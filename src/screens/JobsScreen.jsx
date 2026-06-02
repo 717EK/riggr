@@ -16,7 +16,9 @@ export function JobsScreen({ state, deptById, projById, approvals, ops }) {
       <div className="sec-h" style={{ marginTop: 6 }}><h2>Jobs</h2><span className="link" onClick={ops.exportXlsx}><Download size={15} /> Export</span></div>
       <div style={{ position: 'relative', marginBottom: 12 }}><Search size={17} style={{ position: 'absolute', left: 14, top: 13, color: 'var(--faint)' }} /><input className="in" style={{ paddingLeft: 40 }} placeholder="Search job, customer, product…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
       <div className="pill-tabs">{tabs.map((t) => <div key={t.id} className={`ptab ${filter === t.id ? 'on' : ''}`} onClick={() => setFilter(t.id)}>{t.label}{t.n > 0 && <span className="tb">{t.n}</span>}</div>)}</div>
-      {list.length === 0 ? <Empty icon={ClipboardList} text="No jobs here" /> : list.map((j) => <JobCard key={j.id} job={j} deptById={deptById} projById={projById} mode="admin" ops={ops} />)}
+      <div className="col-2">
+        {list.length === 0 ? <Empty icon={ClipboardList} text="No jobs here" /> : list.map((j) => <JobCard key={j.id} job={j} deptById={deptById} projById={projById} mode="admin" ops={ops} />)}
+      </div>
     </>
   );
 }

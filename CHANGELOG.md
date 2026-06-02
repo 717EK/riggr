@@ -4,6 +4,21 @@ Job control for **Giant Truss**. Truss, rigging & event-production job tracking.
 
 ---
 
+## v3.1.0 — "Any Screen" · 2026
+Responsive across phone, tablet, iPad, and desktop — the layout now rearranges to fit the device.
+
+### Added
+- **Adaptive layout.** Mobile keeps the single column + bottom nav. Tablet widens the column and goes two-up where it helps. Desktop / iPad-landscape switches to a **left sidebar** (logo, nav, prominent New button, user + settings) with a **multi-column dashboard**.
+- **Always-visible footer with a centred circular ＋.** The bottom bar is pinned — it never scrolls away — and the big ＋ in the middle creates a new job/project (or a request, for crew) from anywhere.
+- **Tap any job to open its detail.** Every job card — running or closed — opens a full detail sheet (status, timing, assignee, project, activity log), with admin actions (approve / reactivate / edit / terminate) right inside it.
+
+### Changed
+- Safe-area top padding so the header clears the notch / status bar / camera on phones.
+- Content area scrolls independently; header, sidebar, and bottom nav stay fixed.
+- Job and project lists flow into 2–3 columns on wider screens instead of one narrow strip.
+
+---
+
 ## v3.0.0 — "Giant Truss" · 2026
 The full redesign — rebuilt around the Conneq-style floating-panel aesthetic and branded for Giant Truss.
 

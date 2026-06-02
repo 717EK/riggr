@@ -12,7 +12,7 @@ export function Modals({ modal, state, deptById, projById, me, isAdmin, ops }) {
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="grip" />
         {modal.t === 'job' && <JobForm job={modal.job} preProject={modal.preProject} departments={departments} users={users} projects={projects} onClose={close} onSave={(d) => modal.job ? ops.editJob(modal.job.id, d) : ops.createJob(d)} />}
-        {modal.t === 'jobview' && <JobView job={modal.job} deptById={deptById} projById={projById} onClose={close} />}
+        {modal.t === 'jobview' && <JobView job={modal.job} deptById={deptById} projById={projById} isAdmin={isAdmin} ops={ops} onClose={close} />}
         {modal.t === 'project' && <ProjectForm project={modal.project} users={users} onClose={close} onSave={(d) => modal.project ? ops.updateProject(modal.project.id, d) : ops.addProject(d)} />}
         {modal.t === 'employee' && <EmployeeForm emp={modal.emp} departments={departments} users={users} onClose={close} onSave={(d) => modal.emp ? ops.editEmployee(modal.emp.id, d) : ops.addEmployee(d)} onToggle={() => ops.toggleActive(modal.emp.id)} />}
         {modal.t === 'approveReq' && <ApproveReqForm req={modal.req} users={users} deptById={deptById} onClose={close} onApprove={(d) => ops.approveRequest(modal.req, d)} />}
@@ -60,7 +60,7 @@ export function JobForm({ job, preProject, departments, users, projects, request
 }
 export function deptById2(departments, id) { return (departments.find((d) => d.id === id) || {}).name || 'department'; }
 
-export function JobView({ job: j, deptById, projById, onClose }) {
+export function JobView({ job: j, deptById, projById, isAdmin, ops, onClose }) {
   const d = deptById(j.deptId), st = STATUS[j.status], pr = j.projectId ? projById(j.projectId) : null;
   return (
     <>
@@ -70,7 +70,13 @@ export function JobView({ job: j, deptById, projById, onClose }) {
         <Row k="Customer" v={j.customer || '—'} /><Row k="Product" v={j.product || '—'} /><Row k="Material" v={j.material || '—'} /><Row k="Process" v={j.process || '—'} /><Row k="Quantity" v={j.qty || '—'} /><Row k="Assigned" v={j.assigneeId ? (j.operator || 'User') : `All ${d.name}`} /><Row k="Start" v={fmtT(j.startTime)} /><Row k="End" v={fmtT(j.endTime)} /><Row k="Date" v={fmtD(j.date)} last />
       </div>
       {j.remarks && <div className="card" style={{ marginBottom: 12 }}><div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--faint)', fontWeight: 700, marginBottom: 4 }}>Remarks</div><div style={{ fontSize: 13.5 }}>{j.remarks}</div></div>}
-      {(j.history || []).length > 0 && <div className="card"><div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--faint)', fontWeight: 700, marginBottom: 8 }}>Activity</div>{j.history.slice().reverse().map((h, i) => <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, padding: '5px 0', borderBottom: i < j.history.length - 1 ? '1px solid var(--line)' : 'none' }}><span style={{ fontWeight: 600 }}>{h.by} · {h.action}</span><span style={{ color: 'var(--muted)' }}>{fmtT(h.ts)}</span></div>)}</div>}
+      {(j.history || []).length > 0 && <div className="card" style={{ marginBottom: isAdmin ? 14 : 0 }}><div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--faint)', fontWeight: 700, marginBottom: 8 }}>Activity</div>{j.history.slice().reverse().map((h, i) => <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, padding: '5px 0', borderBottom: i < j.history.length - 1 ? '1px solid var(--line)' : 'none' }}><span style={{ fontWeight: 600 }}>{h.by} · {h.action}</span><span style={{ color: 'var(--muted)' }}>{fmtT(h.ts)}</span></div>)}</div>}
+      {isAdmin && ops && <div className="acts">
+        {j.status === 'awaiting' && <><button className="btn ok" onClick={() => { ops.approve(j); onClose(); }}><CheckCircle2 size={15} />Approve</button><button className="btn info" onClick={() => { ops.reactivate(j); onClose(); }}><RotateCcw size={15} />Reactivate</button></>}
+        {j.status === 'completed' && <button className="btn info sm" onClick={() => { ops.reactivate(j); onClose(); }}><RotateCcw size={14} />Reopen</button>}
+        {j.status !== 'terminated' && <button className="btn ghost sm" onClick={() => ops.setModal({ t: 'job', job: j })}><Pencil size={14} />Edit</button>}
+        {!['completed', 'terminated'].includes(j.status) && <button className="btn danger sm" onClick={() => { ops.terminate(j); onClose(); }}><XCircle size={14} />Terminate</button>}
+      </div>}
     </>
   );
 }

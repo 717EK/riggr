@@ -12,6 +12,7 @@ export function ProjectsScreen({ state, deptById, projById, ops }) {
   return (
     <>
       <div className="sec-h" style={{ marginTop: 6 }}><h2>Projects</h2><span className="link" onClick={() => ops.setModal({ t: 'project' })}><Plus size={15} /> New</span></div>
+      <div className="col-2">
       {state.projects.length === 0 ? <Empty icon={Folder} text="No projects yet — create one to group jobs" /> : state.projects.map((p, i) => {
         const js = state.jobs.filter((j) => j.projectId === p.id); const active = js.filter((j) => !['completed', 'terminated'].includes(j.status)).length;
         const denom = js.length - js.filter((j) => j.status === 'terminated').length; const pc = denom ? Math.round(js.filter((j) => j.status === 'completed').length / denom * 100) : 0;
@@ -27,6 +28,7 @@ export function ProjectsScreen({ state, deptById, projById, ops }) {
           </div>
         );
       })}
+      </div>
     </>
   );
 }
