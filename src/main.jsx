@@ -7,8 +7,8 @@ import { ErrorBoundary } from './components/ErrorBoundary.jsx';
 const reset = document.createElement('style');
 reset.textContent = `
   html, body, #root { margin: 0; padding: 0; height: 100%; }
-  html { background: #f3f2ec; }
-  body { overscroll-behavior-y: none; background: #f3f2ec; }
+  html { background: #ffffff; }
+  body { overscroll-behavior-y: none; background: #ffffff; }
   #root { height: 100dvh; overflow: hidden; }
   * { -webkit-tap-highlight-color: transparent; }
 `;

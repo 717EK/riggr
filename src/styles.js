@@ -65,9 +65,9 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .bar.sel{width:30px; box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent)}
 .bar-x{font-size:9.5px; font-weight:700; color:var(--faint); text-align:center; line-height:1.15; min-height:42px; padding:5px 7px; border-radius:11px; transition:background .15s,color .15s; flex-shrink:0; margin-top:14px; display:flex; flex-direction:column; align-items:center; justify-content:center}
 .bar-x.sel{color:var(--accent-ink); background:var(--accent)}
-.viz-mid{position:absolute; left:50%; top:8px; bottom:52px; width:2px; transform:translateX(-50%); z-index:1;
-  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 35%,transparent),transparent)}
-.viz-mid::after{content:''; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); width:6px; height:6px; border-radius:50%; background:var(--accent)}
+.viz-mid{position:absolute; left:50%; top:8px; bottom:52px; width:3px; transform:translateX(-50%); z-index:1; border-radius:2px;
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 55%,transparent),transparent)}
+.viz-mid::after{content:''; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); width:7px; height:7px; border-radius:50%; background:var(--accent)}
 
 .pillrow{display:flex; gap:10px; overflow-x:auto; padding:2px 0 4px; scrollbar-width:none; margin-bottom:4px}
 .pillrow::-webkit-scrollbar{display:none}

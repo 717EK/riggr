@@ -15,11 +15,21 @@ export function Visualizer({ jobs, mode, setMode, selKey, setSelKey }) {
     const sc = scroller.current; if (!sc) return;
     const el = sc.querySelector(`[data-key="${(window.CSS && window.CSS.escape) ? window.CSS.escape(key) : key}"]`);
     if (!el) return;
-    const target = el.offsetLeft + el.offsetWidth / 2 - sc.clientWidth / 2;
-    lockUntil.current = Date.now() + (smooth ? 600 : 120); // ignore scroll handler while we move
+    const target = Math.max(0, el.offsetLeft + el.offsetWidth / 2 - sc.clientWidth / 2);
+    lockUntil.current = Date.now() + (smooth ? 700 : 140); // ignore scroll handler while we move
     sc.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'auto' });
   };
-  const pick = (key) => { setSelKey(key); requestAnimationFrame(() => centerOn(key, true)); };
+  // Tap: set selection, then center AFTER the re-render paints (double rAF so the
+  // newly-selected bar's width change is reflected in offsetLeft before we measure).
+  const pick = (key) => {
+    setSelKey(key);
+    lockUntil.current = Date.now() + 800; // pre-lock so the scroll handler doesn't fight us
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      centerOn(key, true);
+      // re-center once more after the smooth scroll settles, in case widths shifted
+      setTimeout(() => centerOn(key, true), 120);
+    }));
+  };
 
   useEffect(() => { const id = setTimeout(() => centerOn(selKey, false), 60); return () => clearTimeout(id); /* eslint-disable-next-line */ }, [mode]);
   useEffect(() => { const id = setTimeout(() => centerOn(selKey, false), 80); return () => clearTimeout(id); /* eslint-disable-next-line */ }, []);
