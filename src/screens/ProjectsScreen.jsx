@@ -48,6 +48,7 @@ export function ProjectDetail({ project: p, state, deptById, ops, onBack }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6, marginBottom: 14 }}>
         <button className="ico-btn sq" onClick={onBack}><ChevronLeft size={18} /></button>
         <div style={{ flex: 1 }}><div style={{ fontSize: 12.5, color: 'var(--muted)', fontWeight: 600 }}>{p.client}</div><h2 style={{ fontSize: 19 }}>{p.name}</h2></div>
+        <button className="ico-btn sq" onClick={() => ops.setModal({ t: 'askUpdate', project: p })}><Bell size={16} /></button>
         <button className="ico-btn sq" onClick={() => ops.setModal({ t: 'project', project: p })}><Pencil size={16} /></button>
       </div>
       <div className="hero" style={{ marginBottom: 14 }}>

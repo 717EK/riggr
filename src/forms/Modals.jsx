@@ -13,6 +13,7 @@ export function Modals({ modal, state, deptById, projById, me, isAdmin, ops }) {
         <div className="grip" />
         {modal.t === 'job' && <JobForm job={modal.job} preProject={modal.preProject} departments={departments} users={users} projects={projects} onClose={close} onSave={(d) => modal.job ? ops.editJob(modal.job.id, d) : ops.createJob(d)} />}
         {modal.t === 'jobview' && <JobView job={modal.job} deptById={deptById} projById={projById} isAdmin={isAdmin} ops={ops} onClose={close} />}
+        {modal.t === 'askUpdate' && <AskUpdateForm job={modal.job} project={modal.project} deptById={deptById} state={state} onClose={close} onSend={(comment) => modal.project ? ops.askProjectUpdate(modal.project, comment) : ops.askJobUpdate(modal.job, comment)} />}
         {modal.t === 'project' && <ProjectForm project={modal.project} users={users} onClose={close} onSave={(d) => modal.project ? ops.updateProject(modal.project.id, d) : ops.addProject(d)} />}
         {modal.t === 'employee' && <EmployeeForm emp={modal.emp} departments={departments} users={users} onClose={close} onSave={(d) => modal.emp ? ops.editEmployee(modal.emp.id, d) : ops.addEmployee(d)} onToggle={() => ops.toggleActive(modal.emp.id)} />}
         {modal.t === 'approveReq' && <ApproveReqForm req={modal.req} users={users} deptById={deptById} onClose={close} onApprove={(d) => ops.approveRequest(modal.req, d)} />}
@@ -74,9 +75,28 @@ export function JobView({ job: j, deptById, projById, isAdmin, ops, onClose }) {
       {isAdmin && ops && <div className="acts">
         {j.status === 'awaiting' && <><button className="btn ok" onClick={() => { ops.approve(j); onClose(); }}><CheckCircle2 size={15} />Approve</button><button className="btn info" onClick={() => { ops.reactivate(j); onClose(); }}><RotateCcw size={15} />Reactivate</button></>}
         {j.status === 'completed' && <button className="btn info sm" onClick={() => { ops.reactivate(j); onClose(); }}><RotateCcw size={14} />Reopen</button>}
+        {!['completed', 'terminated'].includes(j.status) && <button className="btn info sm" onClick={() => ops.setModal({ t: 'askUpdate', job: j })}><Bell size={14} />Ask update</button>}
         {j.status !== 'terminated' && <button className="btn ghost sm" onClick={() => ops.setModal({ t: 'job', job: j })}><Pencil size={14} />Edit</button>}
         {!['completed', 'terminated'].includes(j.status) && <button className="btn danger sm" onClick={() => { ops.terminate(j); onClose(); }}><XCircle size={14} />Terminate</button>}
       </div>}
+    </>
+  );
+}
+
+export function AskUpdateForm({ job, project, deptById, state, onClose, onSend }) {
+  const [comment, setComment] = useState('');
+  let recipient;
+  if (project) recipient = project.headId ? (state.users.find((u) => u.id === project.headId)?.name || 'project head') + ' (project head)' : 'no project head set';
+  else recipient = job.assigneeId ? (job.operator || state.users.find((u) => u.id === job.assigneeId)?.name || 'assignee') : `everyone in ${deptById(job.deptId).name}`;
+  return (
+    <>
+      <div className="sh-h"><h3>Ask for update</h3><button className="ico-btn sq" onClick={onClose}><X size={17} /></button></div>
+      <div className="card" style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 11 }}>
+        <div className="n-ic" style={{ width: 40, height: 40, background: 'color-mix(in srgb,#3b82f6 14%,transparent)', color: '#2563eb' }}><Bell size={18} /></div>
+        <div style={{ flex: 1 }}><div className="nm" style={{ fontSize: 14.5, fontWeight: 700 }}>{project ? project.name : `${job.jobNo} · ${job.product || job.customer}`}</div><div className="un">Request goes to <b>{recipient}</b></div></div>
+      </div>
+      <div className="field"><label>What do you want to know? (optional)</label><textarea className="in" rows={3} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Leave blank for a simple status update, or ask something specific — e.g. “How many trusses are rigged so far?”" /></div>
+      <button className="btn primary block" onClick={() => onSend(comment.trim())}><Bell size={16} />{comment.trim() ? 'Send request' : 'Request status update'}</button>
     </>
   );
 }

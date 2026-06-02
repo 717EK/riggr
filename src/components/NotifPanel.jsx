@@ -12,6 +12,7 @@ export function NotifPanel({ notifs, onClose, onRead }) {
     assigned: { I: Plus, c: '#5fa83a', t: (n) => <>New job <b>{n.jobNo}</b> assigned to you</> },
     request: { I: Inbox, c: '#caa531', t: (n) => <><b>{n.by}</b> sent a request to approve</> },
     reqApproved: { I: Check, c: '#5fa83a', t: (n) => <>Your request was approved{n.jobNo ? <> — <b>{n.jobNo}</b></> : ''}</> },
+    updateReq: { I: Bell, c: '#3b82f6', t: (n) => <><b>{n.by}</b> asked for an update on <b>{n.jobNo || n.projectName}</b>{n.note ? <>: “{n.note}”</> : <> — status please</>}</> },
   };
   return (
     <div className="pscrim" onClick={onClose}>

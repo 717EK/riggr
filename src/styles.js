@@ -39,30 +39,31 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .sec-h .link{font-size:13px; color:var(--muted); font-weight:700; cursor:pointer; display:flex; align-items:center; gap:3px}
 
 /* VISUALIZER */
-.viz{position:relative; background:var(--hero); border-radius:26px; padding:18px 0 14px; overflow:hidden; margin-bottom:6px}
+.viz{position:relative; background:var(--hero); border-radius:26px; padding:18px 0 16px; overflow:hidden; margin-bottom:6px}
 .viz::before{content:''; position:absolute; left:-40px; bottom:-60px; width:180px; height:180px; border-radius:50%;
   background:radial-gradient(circle,color-mix(in srgb,var(--accent) 16%,transparent),transparent 70%)}
-.viz-top{display:flex; align-items:center; justify-content:space-between; padding:0 18px 14px}
-.viz-sel{color:var(--hero-text)}
-.viz-sel .lab{font-family:'Bricolage Grotesque'; font-size:18px; font-weight:700; line-height:1}
+.viz-top{display:flex; align-items:center; justify-content:space-between; padding:0 18px 16px; gap:10px; flex-wrap:wrap}
+.viz-sel{color:var(--hero-text); min-width:0}
+.viz-sel .lab{font-family:'Bricolage Grotesque'; font-size:18px; font-weight:700; line-height:1.05}
 .viz-sel .cnt{font-size:12.5px; color:rgba(255,255,255,.55); font-weight:600; margin-top:3px}
-.seg-modes{display:flex; gap:4px; background:rgba(255,255,255,.08); border-radius:12px; padding:3px}
+.seg-modes{display:flex; gap:4px; background:rgba(255,255,255,.08); border-radius:12px; padding:3px; flex-shrink:0}
 .seg-modes button{border:none; background:none; color:rgba(255,255,255,.6); font-family:'Hanken Grotesk'; font-weight:700; font-size:12px;
   padding:6px 11px; border-radius:9px; cursor:pointer; transition:.15s}
 .seg-modes button.on{background:var(--accent); color:var(--accent-ink)}
-.bars{display:flex; align-items:flex-end; height:118px; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 calc(50% - 17px);
-  scrollbar-width:none; position:relative; z-index:2}
+.bars{display:flex; align-items:flex-end; height:156px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory;
+  padding:0 calc(50% - 20px); scrollbar-width:none; position:relative; z-index:2;
+  touch-action:pan-x; overscroll-behavior:contain; -webkit-overflow-scrolling:touch}
 .bars::-webkit-scrollbar{display:none}
-.barwrap{flex:0 0 34px; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; cursor:pointer}
-.bar{width:18px; border-radius:6px 6px 4px 4px; background:var(--olive); transition:height .35s,background .25s,width .2s; min-height:6px}
+.barwrap{flex:0 0 40px; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; cursor:pointer; padding-bottom:2px}
+.bar{width:20px; border-radius:7px 7px 5px 5px; background:var(--olive); transition:height .35s,background .25s,width .2s; min-height:6px; flex-shrink:0}
 .bar.on{background:var(--accent)}
-.bar.sel{width:24px; box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
-.bar-n{font-family:'Bricolage Grotesque'; font-size:10px; font-weight:700; color:rgba(255,255,255,.4); margin-bottom:4px; height:12px}
+.bar.sel{width:26px; box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+.bar-n{font-family:'Bricolage Grotesque'; font-size:11px; font-weight:700; color:rgba(255,255,255,.4); margin-bottom:5px; height:14px}
 .bar-n.show{color:var(--hero-text)}
-.bar-x{font-size:9.5px; font-weight:700; color:rgba(255,255,255,.35); margin-top:7px; text-align:center; line-height:1.15; height:22px}
-.bar-x.sel{color:var(--hero-text)}
-.viz-mid{position:absolute; left:50%; top:46px; bottom:34px; width:2px; transform:translateX(-50%); z-index:1;
-  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 50%,transparent),transparent)}
+.bar-x{font-size:9.5px; font-weight:700; color:rgba(255,255,255,.4); margin-top:8px; text-align:center; line-height:1.25; min-height:34px; padding:3px 5px; border-radius:9px; transition:.15s}
+.bar-x.sel{color:var(--accent-ink); background:var(--accent)}
+.viz-mid{position:absolute; left:50%; top:54px; bottom:46px; width:2px; transform:translateX(-50%); z-index:1;
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 45%,transparent),transparent)}
 .viz-mid::after{content:''; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); width:6px; height:6px; border-radius:50%; background:var(--accent)}
 
 .pillrow{display:flex; gap:10px; overflow-x:auto; padding:2px 0 4px; scrollbar-width:none; margin-bottom:4px}
@@ -115,14 +116,14 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .btn.sm{padding:8px 12px; font-size:12.5px; border-radius:11px}
 .btn.block{width:100%}
 
-.bnav{position:absolute; bottom:0; left:0; right:0; min-height:var(--nav-h); padding:0 4px calc(var(--safe-bottom) + 8px); background:var(--card);
-  border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05)}
-.bn{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 0 4px; color:var(--faint); cursor:pointer;
+.bnav{position:absolute; bottom:0; left:0; right:0; min-height:var(--nav-h); padding:0 4px; background:var(--card);
+  border-top:1px solid var(--line); display:flex; align-items:flex-start; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05); padding-bottom:env(safe-area-inset-bottom,0px)}
+.bn{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:13px 0 6px; color:var(--faint); cursor:pointer;
   font-size:10px; font-weight:700; background:none; border:none; transition:.15s; position:relative; min-width:0}
 .bn.on{color:var(--ink)}
-.bn .bdot{position:absolute; top:5px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
-.bn-fab{flex:0 0 auto; width:58px; height:58px; margin:0 6px -14px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
-  border:4px solid var(--app); display:grid; place-items:center; cursor:pointer; box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 55%,transparent); transition:.15s}
+.bn .bdot{position:absolute; top:8px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
+.bn-fab{flex:0 0 auto; width:66px; height:66px; margin:-22px 8px 0; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+  border:5px solid var(--app); display:grid; place-items:center; cursor:pointer; box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 60%,transparent); transition:.15s; align-self:flex-start}
 .bn-fab:active{transform:scale(.9)}
 
 .empty{text-align:center; padding:38px 16px; color:var(--faint)}

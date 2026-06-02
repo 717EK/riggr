@@ -4,6 +4,18 @@ Job control for **Giant Truss**. Truss, rigging & event-production job tracking.
 
 ---
 
+## v3.1.1 — "Polish" · 2026
+Fixes from first on-device testing, plus a requested feature.
+
+### Added
+- **Ask for update** on any job or project. Admin opens it from a job's detail (or a project's header). Leave the box blank for a plain status request, or type a specific question. It routes to the right person automatically — the assigned crew member, the whole department for a dept-wide job, or the **project head** for a project — and shows up in their notifications.
+
+### Fixed
+- **Job-volume chart** now scrolls **horizontally only** (it was drifting in every direction), is taller so dates and bars aren't clipped, and the **selected day stays readable** (it was whiting out).
+- **Bottom bar** runs edge-to-edge with no inner padding; the centre **＋** is larger and overshoots the bar.
+
+---
+
 ## v3.1.0 — "Any Screen" · 2026
 Responsive across phone, tablet, iPad, and desktop — the layout now rearranges to fit the device.
 
