@@ -63,7 +63,7 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
   transition:height .35s,background .25s,width .2s; min-height:7px}
 .bar.on{background:var(--accent)}
 .bar.sel{width:30px; box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent)}
-.bar-x{font-size:9.5px; font-weight:700; color:var(--faint); text-align:center; line-height:1.2; height:42px; padding:6px 6px 0; border-radius:10px; transition:.15s; flex-shrink:0; margin-top:8px}
+.bar-x{font-size:9.5px; font-weight:700; color:var(--faint); text-align:center; line-height:1.18; height:40px; padding:0 7px; border-radius:11px; transition:background .15s,color .15s; flex-shrink:0; margin-top:9px; display:flex; flex-direction:column; align-items:center; justify-content:center}
 .bar-x.sel{color:var(--accent-ink); background:var(--accent)}
 .viz-mid{position:absolute; left:50%; top:8px; bottom:52px; width:2px; transform:translateX(-50%); z-index:1;
   background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 35%,transparent),transparent)}
@@ -130,6 +130,12 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .bn-fab{flex:0 0 auto; width:62px; height:62px; margin:-22px 8px 0; border-radius:50%; background:var(--accent); color:var(--accent-ink);
   border:5px solid var(--app); display:grid; place-items:center; cursor:pointer; box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 60%,transparent); transition:.15s; align-self:flex-start}
 .bn-fab:active{transform:scale(.9)}
+
+/* Installed to home screen (standalone): no browser chrome below, so drop the safe-area reserve and sit flush at the bottom */
+@media all and (display-mode: standalone) {
+  .bnav{ height:var(--nav-h); padding-bottom:0; }
+  .content{ padding-bottom:calc(var(--nav-h) + 16px); }
+}
 
 .empty{text-align:center; padding:38px 16px; color:var(--faint)}
 .empty .e-ic{width:54px; height:54px; border-radius:18px; background:var(--card); box-shadow:var(--shadow-sm); display:grid; place-items:center; margin:0 auto 12px; color:var(--faint)}
