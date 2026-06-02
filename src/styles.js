@@ -1,14 +1,14 @@
 export const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
-:root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:74px; }
+:root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:58px; }
 .gt{font-family:'Hanken Grotesk',system-ui,sans-serif; color:var(--text); width:100%; height:100vh; height:100dvh;
   background:var(--bg); display:flex; justify-content:center; transition:background .3s; overflow:hidden}
 .shell{width:100%; max-width:480px; height:100%; background:var(--app); position:relative;
   box-shadow:0 0 80px rgba(0,0,0,.14); display:flex; flex-direction:column; transition:background .3s; overflow:hidden}
 .main{flex:1; display:flex; flex-direction:column; min-width:0; min-height:0; position:relative}
 .scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain}
-.content{padding:0 16px calc(var(--nav-h) + var(--safe-bottom) + 24px)}
+.content{padding:0 16px calc(var(--nav-h) + min(var(--safe-bottom), 12px) + 20px)}
 .sidebar{display:none}
 .topbar{display:none}
 .disp{font-family:'Bricolage Grotesque',sans-serif}
@@ -121,13 +121,13 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 
 .bnav{position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--line);
   display:flex; align-items:stretch; justify-content:space-around; z-index:24; box-shadow:0 -4px 20px rgba(0,0,0,.05);
-  height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px)); padding-bottom:env(safe-area-inset-bottom,0px)}
-.bnav::after{content:''; position:absolute; left:0; right:0; top:100%; height:80px; background:var(--card)}
-.bn{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:10px 0; color:var(--faint); cursor:pointer;
+  height:calc(var(--nav-h) + min(env(safe-area-inset-bottom,0px), 12px)); padding-bottom:min(env(safe-area-inset-bottom,0px), 12px)}
+.bnav::after{content:''; position:absolute; left:0; right:0; top:100%; height:60px; background:var(--card)}
+.bn{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:6px 0; color:var(--faint); cursor:pointer;
   font-size:10px; font-weight:700; background:none; border:none; transition:.15s; position:relative; min-width:0}
 .bn.on{color:var(--ink)}
-.bn .bdot{position:absolute; top:9px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
-.bn-fab{flex:0 0 auto; width:64px; height:64px; margin:-24px 8px 0; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+.bn .bdot{position:absolute; top:4px; right:calc(50% - 16px); width:7px; height:7px; border-radius:50%; background:var(--accent); border:1.5px solid var(--card)}
+.bn-fab{flex:0 0 auto; width:62px; height:62px; margin:-22px 8px 0; border-radius:50%; background:var(--accent); color:var(--accent-ink);
   border:5px solid var(--app); display:grid; place-items:center; cursor:pointer; box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 60%,transparent); transition:.15s; align-self:flex-start}
 .bn-fab:active{transform:scale(.9)}
 

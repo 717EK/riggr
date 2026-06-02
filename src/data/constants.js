@@ -1,5 +1,5 @@
 export const APP_NAME = 'RIGGR';
-export const APP_VERSION = '3.4.3';
+export const APP_VERSION = '3.4.4';
 export const APP_CODENAME = 'Giant Truss';
 export const STATE_KEY = 'riggr:state:v3';
 export const PREFS_KEY = 'riggr:prefs:v1';
