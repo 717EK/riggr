@@ -3,7 +3,7 @@ import { Home, ClipboardList, Boxes, Users, Bell, Plus, Cal, ChevronLeft, Chevro
 import { uid, nowISO, dk, parseDK, addDays, startOfWeek, fmtT, fmtD, WD, MO, MOABBR, initials, buildBuckets, currentKey, jobInBucket, genUsername, genPin } from '../lib/helpers.js';
 import { Empty } from './Bits.jsx';
 
-export function NotifPanel({ notifs, onClose, onRead }) {
+export function NotifPanel({ notifs, onClose, onRead, onOpen }) {
   const map = {
     approval: { I: AlertTriangle, c: '#3b82f6', t: (n) => <><b>{n.by}</b> marked <b>{n.jobNo}</b> complete — needs approval</> },
     approved: { I: CheckCircle2, c: '#5fa83a', t: (n) => <><b>{n.jobNo}</b> approved by <b>{n.by}</b></> },
@@ -20,7 +20,7 @@ export function NotifPanel({ notifs, onClose, onRead }) {
         <div className="sh-h"><h3>Notifications</h3><button className="ico-btn" style={{ width: 34, height: 34 }} onClick={onClose}><X size={17} /></button></div>
         {notifs.length > 0 && <button className="btn ghost sm block" style={{ marginBottom: 12 }} onClick={onRead}>Mark all read</button>}
         {notifs.length === 0 ? <Empty icon={Bell} text="No notifications" /> : notifs.map((n) => { const m = map[n.type] || map.assigned; const I = m.I; return (
-          <div key={n.id} className={`notif ${n.read ? '' : 'un'}`}><div className="n-ic" style={{ background: `color-mix(in srgb, ${m.c} 14%, transparent)`, color: m.c }}><I size={17} /></div><div style={{ flex: 1 }}><div className="nt">{m.t(n)}</div><div className="nm">{fmtD(n.ts)} · {fmtT(n.ts)}</div></div></div>); })}
+          <div key={n.id} className={`notif ${n.read ? '' : 'un'}`} onClick={() => onOpen && onOpen(n)} style={{ cursor: 'pointer' }}><div className="n-ic" style={{ background: `color-mix(in srgb, ${m.c} 14%, transparent)`, color: m.c }}><I size={17} /></div><div style={{ flex: 1 }}><div className="nt">{m.t(n)}</div><div className="nm">{fmtD(n.ts)} · {fmtT(n.ts)}</div></div><CR size={16} color="var(--faint)" /></div>); })}
       </div>
     </div>
   );

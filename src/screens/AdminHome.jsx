@@ -49,11 +49,8 @@ export function AdminHome({ state, deptById, projById, approvals, lowStock, ops 
   const sections = {
     volume: { wide: true, node: (
       <>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '0 4px 10px' }}>
-          <h2 style={{ fontSize: 17 }}>Job volume</h2>
-          <button className="ico-btn sq" onClick={() => setCalOpen(true)}><Cal size={16} /></button>
-        </div>
-        <Visualizer jobs={scoped} mode={mode} setMode={setMode} selKey={selKey} setSelKey={setSelKey} />
+        <h2 style={{ fontSize: 17, margin: '0 4px 10px' }}>Job volume</h2>
+        <Visualizer jobs={scoped} mode={mode} setMode={setMode} selKey={selKey} setSelKey={setSelKey} onCal={() => setCalOpen(true)} />
       </>
     ) },
     selected: { node: (
@@ -132,11 +129,6 @@ export function AdminHome({ state, deptById, projById, approvals, lowStock, ops 
 
   return (
     <>
-      <div className="pill-tabs" style={{ marginTop: 4, marginBottom: 12 }}>
-        <div className={`ptab ${projFilter === 'all' ? 'on' : ''}`} onClick={() => setProjFilter('all')}>All projects</div>
-        {state.projects.map((p) => <div key={p.id} className={`ptab ${projFilter === p.id ? 'on' : ''}`} onClick={() => setProjFilter(p.id)}><span className="dept-dot" style={{ background: p.color }} />{p.name}</div>)}
-      </div>
-
       {editing && <div className="dash-bar">
         <span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 600 }}>Drag cards or use arrows to reorder</span>
         <button className="btn primary sm" onClick={() => setEditing(false)}><Check size={14} />Done</button>

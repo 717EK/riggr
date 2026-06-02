@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { Home, ClipboardList, Boxes, Users, Bell, Plus, Cal, ChevronLeft, ChevronRight, Search, LogOut, CheckCircle2, RotateCcw, XCircle, Play, Pause, Flag, Clock, Download, Pencil, Trash2, X, ArrowUpRight, ArrowDownRight, AlertTriangle, UserPlus, Check, KeyRound, ShieldCheck, Layers, CornerDownLeft, Delete, Folder, Settings, Sun, Moon, Palette, MapPin, HardHat, Truck, Activity, Package, Inbox, CR } from '../lib/icons.js';
 import { uid, nowISO, dk, parseDK, addDays, startOfWeek, fmtT, fmtD, WD, MO, MOABBR, initials, buildBuckets, currentKey, jobInBucket, genUsername, genPin } from '../lib/helpers.js';
 
-export function Visualizer({ jobs, mode, setMode, selKey, setSelKey }) {
+export function Visualizer({ jobs, mode, setMode, selKey, setSelKey, onCal }) {
   const scroller = useRef(null);
   const raf = useRef(0);
   const lockUntil = useRef(0);
@@ -50,7 +50,7 @@ export function Visualizer({ jobs, mode, setMode, selKey, setSelKey }) {
     <div className="viz">
       <div className="viz-top">
         <div className="viz-sel"><div className="lab">{sel ? sel.label : '—'}</div><div className="cnt">{sel ? `${sel.count} ${sel.count === 1 ? 'job' : 'jobs'}` : ''}</div></div>
-        <div className="seg-modes">{['day', 'week', 'month'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => { setMode(m); setSelKey(currentKey(m)); }}>{m[0].toUpperCase() + m.slice(1)}</button>)}</div>
+        <div className="seg-modes">{['day', 'week', 'month'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => { setMode(m); setSelKey(currentKey(m)); }}>{m[0].toUpperCase() + m.slice(1)}</button>)}{onCal && <button className="seg-cal" onClick={onCal} aria-label="Pick a date"><Cal size={15} /></button>}</div>
       </div>
       <div className="viz-plot">
         <div className="viz-mid" />

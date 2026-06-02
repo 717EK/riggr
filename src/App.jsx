@@ -106,6 +106,16 @@ export default function App() {
     changePin: (pin) => commit({ ...ref.current, users: ref.current.users.map((u) => u.id === me.id ? { ...u, pin } : u) }),
     updateProfile: (d) => { commit({ ...ref.current, users: ref.current.users.map((u) => u.id === me.id ? { ...u, ...d } : u) }); setModal(null); },
     markRead: () => commit({ ...ref.current, notifications: ref.current.notifications.map((n) => (n.toUser === me.id || n.toDept === me.deptId) ? { ...n, read: true } : n) }),
+    openNotif: (n) => {
+      // remove this notification
+      const rest = { ...ref.current, notifications: ref.current.notifications.filter((x) => x.id !== n.id) };
+      commit(rest);
+      setPanel(false);
+      // navigate to the relevant thing
+      if (n.jobId) { const j = rest.jobs.find((x) => x.id === n.jobId); if (j) { setModal({ t: 'jobview', job: j }); return; } setScreen('jobs'); return; }
+      if (n.projectId) { setScreen('projects'); return; }
+      if (n.type === 'request' || n.type === 'updateReq') { setScreen(isAdmin ? 'team' : 'home'); return; }
+    },
     logout: () => { setSession(null); setScreen('home'); setModal(null); },
     pref, setPrefs,
     exportXlsx: () => exportXlsx(state, me, isAdmin, visibleJobs, deptById, projById),
@@ -196,7 +206,7 @@ export default function App() {
           </div>
         </div>
 
-        {panel && <NotifPanel notifs={myNotifs} onClose={() => setPanel(false)} onRead={ops.markRead} />}
+        {panel && <NotifPanel notifs={myNotifs} onClose={() => setPanel(false)} onRead={ops.markRead} onOpen={ops.openNotif} />}
         {modal && <Modals modal={modal} state={state} deptById={deptById} projById={projById} me={me} isAdmin={isAdmin} ops={ops} />}
       </div>
     </div>

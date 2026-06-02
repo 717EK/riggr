@@ -1,7 +1,7 @@
 export const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
-:root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:58px; }
+:root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:52px; }
 .gt{font-family:'Hanken Grotesk',system-ui,sans-serif; color:var(--text); width:100%; height:100vh; height:100dvh;
   background:var(--bg); display:flex; justify-content:center; transition:background .3s; overflow:hidden}
 .shell{width:100%; max-width:480px; height:100%; background:var(--app); position:relative;
@@ -48,6 +48,7 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
 .seg-modes button{border:none; background:none; color:var(--muted); font-family:'Hanken Grotesk'; font-weight:700; font-size:12px;
   padding:6px 11px; border-radius:9px; cursor:pointer; transition:.15s}
 .seg-modes button.on{background:var(--hero); color:var(--hero-text)}
+.seg-cal{margin-left:4px; padding:6px 9px !important; background:var(--card) !important; box-shadow:var(--shadow-sm); color:var(--muted) !important; display:grid; place-items:center}
 .viz-plot{position:relative}
 .bars{display:flex; align-items:flex-end; height:188px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory;
   padding:0 calc(50% - 21px); scrollbar-width:none; position:relative; z-index:2;
@@ -183,13 +184,14 @@ html.is-standalone .content{ padding-bottom:calc(var(--nav-h) + 16px); }
 .pjcard .nm{font-family:'Bricolage Grotesque'; font-size:20px; font-weight:700; line-height:1.1; margin-top:2px}
 .pjcard .big{font-family:'Bricolage Grotesque'; font-size:46px; font-weight:700; line-height:.9}
 
-.field{margin-bottom:14px}
+.field{margin-bottom:14px; min-width:0}
 .field label{display:block; font-size:12px; font-weight:700; color:var(--muted); margin-bottom:6px}
-.in,.sel{width:100%; padding:12px 14px; border-radius:14px; border:1.5px solid var(--line2); background:var(--card2);
-  font-family:'Hanken Grotesk'; font-size:14.5px; color:var(--text); outline:none; transition:.15s}
+.in,.sel{width:100%; max-width:100%; min-width:0; padding:12px 14px; border-radius:14px; border:1.5px solid var(--line2); background:var(--card2);
+  font-family:'Hanken Grotesk'; font-size:14.5px; color:var(--text); outline:none; transition:.15s; box-sizing:border-box}
 .in:focus,.sel:focus{border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
 .in::placeholder{color:var(--faint)}
 .f2{display:grid; grid-template-columns:1fr 1fr; gap:11px}
+.f2 > *{min-width:0}
 .seg{display:flex; gap:7px; flex-wrap:wrap}
 .seg .o{flex:1; min-width:62px; text-align:center; padding:11px 6px; border-radius:12px; border:1.5px solid var(--line2);
   background:var(--card2); cursor:pointer; font-weight:700; font-size:13px; color:var(--muted); transition:.15s}
@@ -202,7 +204,7 @@ html.is-standalone .content{ padding-bottom:calc(var(--nav-h) + 16px); }
 
 .scrim{position:fixed; inset:0; background:rgba(10,11,9,.5); z-index:60; display:flex; align-items:flex-end; justify-content:center; animation:fade .2s}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.sheet{width:100%; max-width:480px; max-height:92vh; overflow-y:auto; background:var(--app); border-radius:28px 28px 0 0; padding:20px 18px 28px; animation:up .28s cubic-bezier(.2,.8,.2,1)}
+.sheet{width:100%; max-width:480px; max-height:92vh; overflow-y:auto; overflow-x:hidden; background:var(--app); border-radius:28px 28px 0 0; padding:20px 18px calc(28px + env(safe-area-inset-bottom,0px)); animation:up .28s cubic-bezier(.2,.8,.2,1)}
 @keyframes up{from{transform:translateY(40px); opacity:.6}to{transform:none; opacity:1}}
 .sh-h{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px}
 .sh-h h3{font-size:19px; font-weight:700}
@@ -246,7 +248,7 @@ html.is-standalone .content{ padding-bottom:calc(var(--nav-h) + 16px); }
 .dash-bar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 2px 10px; min-height:30px}
 .dash-flow{display:flex; flex-direction:column; gap:0}
 .dash-sec{margin-bottom:18px; min-width:0}
-.dash-flow.editing .dash-sec{background:var(--card2); border:1.5px dashed var(--line2); border-radius:18px; padding:12px; margin-bottom:12px; cursor:grab}
+.dash-flow.editing .dash-sec{background:transparent; border:1.5px dashed var(--accent); border-radius:18px; padding:12px; margin-bottom:12px; cursor:grab; position:relative}
 .dash-flow.editing .dash-sec:active{cursor:grabbing}
 .dash-handle{display:flex; align-items:center; gap:8px; margin-bottom:10px}
 .dh-grip{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted)}
