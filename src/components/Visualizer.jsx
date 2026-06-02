@@ -46,7 +46,7 @@ export function Visualizer({ jobs, mode, setMode, selKey, setSelKey }) {
         <div className="viz-mid" />
         <div className="bars" ref={scroller} onScroll={onScroll}>
           {buckets.map((b, i) => {
-            const h = 8 + (b.count / maxCount) * 86;
+            const h = 7 + (b.count / maxCount) * 74;
             const isSel = b.key === selKey;
             const played = selIndex >= 0 && i <= selIndex;
             return (

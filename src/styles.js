@@ -56,14 +56,14 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
   mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
 .bars::-webkit-scrollbar{display:none}
 .barwrap{flex:0 0 42px; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; cursor:pointer}
-.bar-col{position:relative; width:100%; height:130px; flex-shrink:0}
+.bar-col{position:relative; width:100%; height:120px; flex-shrink:0}
 .bar-n{position:absolute; left:0; right:0; bottom:0; font-family:'Bricolage Grotesque'; font-size:12px; font-weight:700; color:var(--faint); text-align:center; height:15px; pointer-events:none}
 .bar-n.show{color:var(--text)}
 .bar{position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:22px; border-radius:8px 8px 5px 5px; background:var(--olive);
   transition:height .35s,background .25s,width .2s; min-height:7px}
 .bar.on{background:var(--accent)}
 .bar.sel{width:30px; box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent)}
-.bar-x{font-size:9.5px; font-weight:700; color:var(--faint); text-align:center; line-height:1.18; height:40px; padding:0 7px; border-radius:11px; transition:background .15s,color .15s; flex-shrink:0; margin-top:9px; display:flex; flex-direction:column; align-items:center; justify-content:center}
+.bar-x{font-size:9.5px; font-weight:700; color:var(--faint); text-align:center; line-height:1.15; min-height:42px; padding:5px 7px; border-radius:11px; transition:background .15s,color .15s; flex-shrink:0; margin-top:14px; display:flex; flex-direction:column; align-items:center; justify-content:center}
 .bar-x.sel{color:var(--accent-ink); background:var(--accent)}
 .viz-mid{position:absolute; left:50%; top:8px; bottom:52px; width:2px; transform:translateX(-50%); z-index:1;
   background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 35%,transparent),transparent)}
@@ -131,8 +131,11 @@ h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; margin:0}
   border:5px solid var(--app); display:grid; place-items:center; cursor:pointer; box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 60%,transparent); transition:.15s; align-self:flex-start}
 .bn-fab:active{transform:scale(.9)}
 
-/* Installed to home screen (standalone): no browser chrome below, so drop the safe-area reserve and sit flush at the bottom */
-@media all and (display-mode: standalone) {
+/* Installed to home screen (standalone): drop the safe-area reserve, sit flush at the bottom.
+   iOS is unreliable with the media query, so the JS-set .is-standalone class on <html> is the primary path. */
+html.is-standalone .bnav{ height:var(--nav-h); padding-bottom:0; }
+html.is-standalone .content{ padding-bottom:calc(var(--nav-h) + 16px); }
+@media all and (display-mode: standalone){
   .bnav{ height:var(--nav-h); padding-bottom:0; }
   .content{ padding-bottom:calc(var(--nav-h) + 16px); }
 }

@@ -14,6 +14,15 @@ reset.textContent = `
 `;
 document.head.appendChild(reset);
 
+// iOS home-screen apps don't reliably match @media (display-mode: standalone),
+// so detect it in JS and tag the root. CSS keys off .is-standalone.
+try {
+  const standalone = window.navigator.standalone === true
+    || window.matchMedia('(display-mode: standalone)').matches
+    || window.matchMedia('(display-mode: fullscreen)').matches;
+  if (standalone) document.documentElement.classList.add('is-standalone');
+} catch (_) {}
+
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
