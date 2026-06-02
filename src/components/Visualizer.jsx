@@ -51,8 +51,10 @@ export function Visualizer({ jobs, mode, setMode, selKey, setSelKey }) {
             const played = selIndex >= 0 && i <= selIndex;
             return (
               <div key={b.key} className="barwrap" data-key={b.key} onClick={() => pick(b.key)}>
-                <div className={`bar-n ${b.count > 0 ? 'show' : ''}`}>{b.count > 0 ? b.count : ''}</div>
-                <div className={`bar ${played ? 'on' : ''} ${isSel ? 'sel' : ''}`} style={{ height: h }} />
+                <div className="bar-col">
+                  <div className={`bar-n ${b.count > 0 ? 'show' : ''}`}>{b.count > 0 ? b.count : ''}</div>
+                  <div className={`bar ${played ? 'on' : ''} ${isSel ? 'sel' : ''}`} style={{ height: h }} />
+                </div>
                 <div className={`bar-x ${isSel ? 'sel' : ''}`}>{b.top && <div>{b.top}</div>}<div>{b.mid}</div><div style={{ opacity: .7 }}>{b.bot}</div></div>
               </div>
             );

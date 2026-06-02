@@ -4,6 +4,20 @@ Job control for **Giant Truss**. Truss, rigging & event-production job tracking.
 
 ---
 
+## v3.3.0 — "Your Layout" · 2026
+Personalisation, self-updating, and fixes from on-device testing.
+
+### Added
+- **Drag-to-reorder dashboard cards.** Tap **Edit layout** on the home dashboard, then drag (or use the arrows) to put the cards in any order — Overview first if you like. The order is saved on the device.
+- **In-app update banner.** When a new version is deployed, the app shows **“Update available → Reload”** while you're using it — no more removing and re-adding it to the home screen.
+
+### Fixed
+- **Bottom bar** is now truly edge-to-edge (removed the stray padding gap under the labels).
+- **Chart date labels** sit in a fixed row at the bottom, so they stay aligned no matter how tall the bar is (they used to drift down as the count grew).
+- Desktop dashboard alignment tightened.
+
+---
+
 ## v3.2.0 — "Cleaner" · 2026
 Layout cleanup, chart polish, and a rebuilt export.
 

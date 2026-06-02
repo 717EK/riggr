@@ -1,10 +1,11 @@
 export const APP_NAME = 'RIGGR';
-export const APP_VERSION = '3.2.0';
+export const APP_VERSION = '3.3.0';
 export const APP_CODENAME = 'Giant Truss';
 export const STATE_KEY = 'riggr:state:v3';
 export const PREFS_KEY = 'riggr:prefs:v1';
 
 export const CHANGELOG = [
+  { v: '3.3.0', name: 'Your Layout', items: ['Drag-to-reorder dashboard cards (Edit layout) — order is saved per device', 'In-app “Update available → Reload” banner when a new version ships — no need to reinstall', 'Bottom bar truly edge-to-edge (removed the stray gap)', 'Chart date labels now sit in a fixed row, aligned regardless of bar height', 'Desktop dashboard alignment tightened'] },
   { v: '3.2.0', name: 'Cleaner', items: ['Bottom bar trimmed to 4 tabs so ＋ sits dead-center; Team moved to a dashboard card', 'Job-volume chart now blends into the page and fades at the edges; tapping a day snaps it to exact center', 'Team: remove a user completely (hard delete)', 'Excel rebuilt — Main tab is the single source (summary on top + every job, with a Department column); department tabs are filtered views with freeze panes + filters'] },
   { v: '3.1.1', name: 'Polish', items: ['Ask-for-update on any job or project — default status request or a specific question, routed to the assignee, department, or project head', 'Job-volume chart now scrolls horizontally only, taller, with readable selected-day labels', 'Bottom bar runs edge-to-edge; larger centred ＋ that overshoots the bar'] },
   { v: '3.1.0', name: 'Any Screen', items: ['Responsive layout — phone, tablet, iPad, desktop', 'Desktop sidebar + multi-column dashboard', 'Pinned bottom bar with centred ＋ to create jobs/projects', 'Tap any job to open its full detail', 'Safe-area padding so header clears the notch'] },

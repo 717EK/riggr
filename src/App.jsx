@@ -21,6 +21,7 @@ import { UserHome } from './screens/UserHome.jsx';
 import { SettingsScreen } from './screens/SettingsScreen.jsx';
 import { Modals } from './forms/Modals.jsx';
 import { Login, RequestAccess, ForceReset } from './auth/Login.jsx';
+import { UpdatePrompt } from './components/UpdatePrompt.jsx';
 
 export default function App() {
   const [state, setState] = useState(null);
@@ -122,7 +123,7 @@ export default function App() {
 
   return (
     <div className="gt" style={vars}>
-      <div className="shell">
+      <UpdatePrompt />      <div className="shell">
 
         {/* DESKTOP SIDEBAR */}
         <aside className="sidebar">
